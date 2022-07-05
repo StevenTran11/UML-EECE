@@ -1,10 +1,3 @@
-/*
- * EECE.3220: Data Structures
- * Instructor: M. Geiger
- *
- * RTC.cpp: Function to run Program 3 test cases
- */
-
 #include "Time.h"
 #include <iostream>
 #include <string>
