@@ -1,10 +1,3 @@
-/*
- * EECE.3220: Data Structures
- * Instructor: M. Geiger
- * 
- * Time.h: Time class definition
- * Includes prototypes for overloaded operators to be written for Program 3
- */
 // Header guard directives--ensures header included only once
 #ifndef TIME_H
 #define TIME_H
