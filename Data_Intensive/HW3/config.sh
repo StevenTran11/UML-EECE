@@ -172,3 +172,40 @@ echo "Hadoop multi-node cluster setup complete!"
 
 $SPARK_HOME/sbin/stop-all.sh
 $SPARK_HOME/sbin/start-master.sh
+
+cd /users/Stran/HiBench/bin/workloads/micro/dfsioe/prepare
+./prepare.sh
+cd /users/Stran/HiBench/bin/workloads/micro/dfsioe/hadoop
+./run.sh
+#cd /users/Stran/HiBench/bin/workloads/micro/dfsioe/spark
+#./run.sh
+cd /users/Stran/HiBench/bin/workloads/micro/repartition/prepare
+./prepare.sh
+cd /users/Stran/HiBench/bin/workloads/micro/repartition/hadoop
+./run.sh
+#cd /users/Stran/HiBench/bin/workloads/micro/repartition/spark
+#./run.sh
+cd /users/Stran/HiBench/bin/workloads/micro/sleep/prepare
+./prepare.sh
+cd /users/Stran/HiBench/bin/workloads/micro/sleep/hadoop
+./run.sh
+#cd /users/Stran/HiBench/bin/workloads/micro/sleep/spark
+#./run.sh
+cd /users/Stran/HiBench/bin/workloads/micro/sort/prepare
+./prepare.sh
+cd /users/Stran/HiBench/bin/workloads/micro/sort/hadoop
+./run.sh
+#cd /users/Stran/HiBench/bin/workloads/micro/sort/spark
+#./run.sh
+cd /users/Stran/HiBench/bin/workloads/micro/terasort/prepare
+./prepare.sh
+cd /users/Stran/HiBench/bin/workloads/micro/terasort/hadoop
+./run.sh
+#cd /users/Stran/HiBench/bin/workloads/micro/terasort/spark
+#./run.sh
+cd /users/Stran/HiBench/bin/workloads/micro/wordcount/prepare
+./prepare.sh
+cd /users/Stran/HiBench/bin/workloads/micro/wordcount/hadoop
+./run.sh
+#cd /users/Stran/HiBench/bin/workloads/micro/wordcount/spark
+#./run.sh
