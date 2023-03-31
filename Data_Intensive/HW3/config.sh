@@ -108,10 +108,29 @@ if [ -f spark-env.sh ]; then
     sudo rm spark-env.sh
 fi
 cp /usr/local/spark/conf/spark-env.sh.template /usr/local/spark/conf/spark-env.sh
+
+export_line="export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/jre"
+# Append "export JAVA_HOME" line to spark-env.sh.template
+# Check if the line is already present in the files
+if ! grep -qF "$export_line" ${SPARK_INSTALL_DIR}/conf/spark-env.sh; then
+    echo "$export_line" >> ${SPARK_INSTALL_DIR}/conf/spark-env.sh
+fi
+# Set environment variables for Spark
+echo "export SPARK_HOME=/usr/local/spark" >> /usr/local/spark/conf/spark-env.sh
+echo "export HADOOP_CONF_DIR=/usr/local/hadoop/etc/hadoop" >> /usr/local/spark/conf/spark-env.sh
 echo "export SPARK_MASTER_HOST=$ip_address" >> /usr/local/spark/conf/spark-env.sh
 echo "export SPARK_MASTER_PORT=7077" >> /usr/local/spark/conf/spark-env.sh
+#echo "export SPARK_WORKER_PORT=7078-7081" >> /usr/local/spark/conf/spark-env.sh
+echo "export SPARK_WORKER_INSTANCES=1" >> /usr/local/spark/conf/spark-env.sh
 echo "export SPARK_WORKER_CORES=4" >> /usr/local/spark/conf/spark-env.sh
 echo "export SPARK_WORKER_MEMORY=8g" >> /usr/local/spark/conf/spark-env.sh
+
+# Set Spark worker ports
+echo "SPARK_WORKER_OPTS=\"-Dspark.worker.port=8881\"" >> /usr/local/spark/conf/spark-env.sh
+echo "SPARK_WORKER_OPTS=\"-Dspark.worker.port=8882\"" >> /usr/local/spark/conf/spark-env.sh
+echo "SPARK_WORKER_OPTS=\"-Dspark.worker.port=8883\"" >> /usr/local/spark/conf/spark-env.sh
+
+echo "Spark worker ports configured successfully."
 
 for node in $NODE1 $NODE2 $NODE3; do
     scp spark-env.sh ${node}:${SPARK_INSTALL_DIR}/conf
@@ -121,6 +140,23 @@ done
 echo "10.10.1.2" > /usr/local/hadoop/etc/hadoop/slaves
 echo "10.10.1.3" >> /usr/local/hadoop/etc/hadoop/slaves
 echo "10.10.1.4" >> /usr/local/hadoop/etc/hadoop/slaves
+
+for node in $NODE1 $NODE2 $NODE3; do
+    scp slaves ${node}:${HADOOP_INSTALL_DIR}/etc/hadoop
+done
+
+if [ -f slaves ]; then
+    sudo rm slaves
+fi
+cp slaves.template slaves
+# Update the workers file
+echo "10.10.1.2" > /usr/local/spark/conf/slaves
+echo "10.10.1.3" >> //usr/local/spark/conf/slaves
+echo "10.10.1.4" >> /usr/local/spark/conf/slaves
+
+for node in $NODE1 $NODE2 $NODE3; do
+    scp slaves ${node}:${SPARK_INSTALL_DIR}/conf
+done
 
 # Start the Hadoop daemons on the master node (node1)
 cd ${HADOOP_INSTALL_DIR}/sbin
@@ -135,4 +171,4 @@ echo "Hadoop multi-node cluster setup complete!"
 ./mr-jobhistory-daemon.sh start historyserver
 
 $SPARK_HOME/sbin/stop-all.sh
-$SPARK_HOME/sbin/start-all.sh
+$SPARK_HOME/sbin/start-master.sh
