@@ -26,7 +26,7 @@ echo 'export HADOOP_CONF_DIR=$HADOOP_HOME/etc/hadoop' >> ~/.bashrc
 source ~/.bashrc
 
 # Append "export JAVA_HOME" line to mapred-env.sh, hadoop-env.sh and yarn-env.sh
-export_line="export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/jre"
+export_line="export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-arm64/jre"
 
 # Check if the line is already present in the files
 if ! grep -qF "$export_line" ${HADOOP_INSTALL_DIR}/etc/hadoop/mapred-env.sh; then

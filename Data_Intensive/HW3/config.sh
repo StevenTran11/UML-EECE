@@ -109,7 +109,7 @@ if [ -f spark-env.sh ]; then
 fi
 cp /usr/local/spark/conf/spark-env.sh.template /usr/local/spark/conf/spark-env.sh
 
-export_line="export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/jre"
+export_line="export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-arm64/jre"
 # Append "export JAVA_HOME" line to spark-env.sh.template
 # Check if the line is already present in the files
 if ! grep -qF "$export_line" ${SPARK_INSTALL_DIR}/conf/spark-env.sh; then
@@ -120,10 +120,12 @@ echo "export SPARK_HOME=/usr/local/spark" >> /usr/local/spark/conf/spark-env.sh
 echo "export HADOOP_CONF_DIR=/usr/local/hadoop/etc/hadoop" >> /usr/local/spark/conf/spark-env.sh
 echo "export SPARK_MASTER_HOST=$ip_address" >> /usr/local/spark/conf/spark-env.sh
 echo "export SPARK_MASTER_PORT=7077" >> /usr/local/spark/conf/spark-env.sh
-#echo "export SPARK_WORKER_PORT=7078-7081" >> /usr/local/spark/conf/spark-env.sh
+echo "export SPARK_WORKER_PORT=8881" >> /usr/local/spark/conf/spark-env.sh
 echo "export SPARK_WORKER_INSTANCES=1" >> /usr/local/spark/conf/spark-env.sh
 echo "export SPARK_WORKER_CORES=4" >> /usr/local/spark/conf/spark-env.sh
 echo "export SPARK_WORKER_MEMORY=8g" >> /usr/local/spark/conf/spark-env.sh
+echo "export SPARK_EXECUTOR_MEMORY=4g" >> /usr/local/spark/conf/spark-env.sh
+echo "export SPARK_DRIVER_MEMORY=4g" >> /usr/local/spark/conf/spark-env.sh
 
 # Set Spark worker ports
 echo "SPARK_WORKER_OPTS=\"-Dspark.worker.port=8881\"" >> /usr/local/spark/conf/spark-env.sh
@@ -165,6 +167,7 @@ cd ${HADOOP_INSTALL_DIR}/sbin
 ./mr-jobhistory-daemon.sh stop historyserver
 
 # Format the namenode
+hadoop namenode -format
 echo "Hadoop multi-node cluster setup complete!"
 ./start-dfs.sh
 ./start-yarn.sh
@@ -172,40 +175,9 @@ echo "Hadoop multi-node cluster setup complete!"
 
 $SPARK_HOME/sbin/stop-all.sh
 $SPARK_HOME/sbin/start-master.sh
+$SPARK_HOME/sbin/start-slaves.sh
 
-cd /users/Stran/HiBench/bin/workloads/micro/dfsioe/prepare
-./prepare.sh
-cd /users/Stran/HiBench/bin/workloads/micro/dfsioe/hadoop
-./run.sh
-#cd /users/Stran/HiBench/bin/workloads/micro/dfsioe/spark
-#./run.sh
-cd /users/Stran/HiBench/bin/workloads/micro/repartition/prepare
-./prepare.sh
-cd /users/Stran/HiBench/bin/workloads/micro/repartition/hadoop
-./run.sh
-#cd /users/Stran/HiBench/bin/workloads/micro/repartition/spark
-#./run.sh
-cd /users/Stran/HiBench/bin/workloads/micro/sleep/prepare
-./prepare.sh
-cd /users/Stran/HiBench/bin/workloads/micro/sleep/hadoop
-./run.sh
-#cd /users/Stran/HiBench/bin/workloads/micro/sleep/spark
-#./run.sh
-cd /users/Stran/HiBench/bin/workloads/micro/sort/prepare
-./prepare.sh
-cd /users/Stran/HiBench/bin/workloads/micro/sort/hadoop
-./run.sh
-#cd /users/Stran/HiBench/bin/workloads/micro/sort/spark
-#./run.sh
-cd /users/Stran/HiBench/bin/workloads/micro/terasort/prepare
-./prepare.sh
-cd /users/Stran/HiBench/bin/workloads/micro/terasort/hadoop
-./run.sh
-#cd /users/Stran/HiBench/bin/workloads/micro/terasort/spark
-#./run.sh
-cd /users/Stran/HiBench/bin/workloads/micro/wordcount/prepare
-./prepare.sh
-cd /users/Stran/HiBench/bin/workloads/micro/wordcount/hadoop
-./run.sh
-#cd /users/Stran/HiBench/bin/workloads/micro/wordcount/spark
-#./run.sh
+cd
+
+cd Hibench/bin
+./run_all.sh

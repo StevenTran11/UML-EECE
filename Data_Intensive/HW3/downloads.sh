@@ -24,10 +24,10 @@ sudo apt-get install openjdk-8-jdk -y
 sudo update-alternatives --config java <<< '2'
 
 # Export Java to PATH
-echo 'export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/jre' >> ~/.bashrc
+echo 'export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-arm64/jre' >> ~/.bashrc
 echo 'export PATH=$PATH:$JAVA_HOME/bin' >> ~/.bashrc
 source ~/.bashrc
 
 # Export Javac to PATH
-echo 'export PATH=$PATH:/usr/lib/jvm/java-8-openjdk-amd64\jre/bin' >> ~/.bashrc
+echo 'export PATH=$PATH:/usr/lib/jvm/java-8-openjdk-arm64\jre/bin' >> ~/.bashrc
 source ~/.bashrc
