@@ -1,14 +1,24 @@
 #!/bin/bash
 
+
+# Install required packages
+sudo apt-get update -y
+sudo apt-get install -y python3-pip tar gzip bzip2 rlwrap
+# Create 30GB of data
+echo "Create Data"
+dd if=/dev/urandom of=sample-data.bin bs=1M count=1024
+
+# Define the Prometheus data directory
+PROMETHEUS_DATA_DIR="/path/to/prometheus/data"
+
 # Define the sample data set
-DATA_FILE="sample-data.txt"
-echo "Sample data set: $DATA_FILE"
-echo "-------------------------------------"
-cat $DATA_FILE
+INPUT_FILE="sample-data.bin"
+OUTPUT_FILE="sample-data-compressed.bin"
+echo "Sample data set: $INPUT_FILE"
 echo "-------------------------------------"
 
 # Define the compression algorithms to test
-ALGORITHMS=("Block-based compression" "Dictionary-based compression" "Delta encoding" "Run-length encoding")
+ALGORITHMS=("Block-based compression" "Dictionary-based compression" "Delta encoding" "Run-length encoding" "TSDB compression")
 
 # Test each compression algorithm
 for ALGORITHM in "${ALGORITHMS[@]}"
@@ -20,22 +30,26 @@ do
   START_TIME=$(date +%s.%N)
   case $ALGORITHM in
     "Block-based compression")
-      COMPRESSED_FILE="sample-data-block-compressed.txt"
-      tar czf $COMPRESSED_FILE $DATA_FILE
+      COMPRESSED_FILE="sample-data-block-compressed.bin"
+      tar czf $COMPRESSED_FILE $INPUT_FILE
       ;;
     "Dictionary-based compression")
-      COMPRESSED_FILE="sample-data-dictionary-compressed.txt"
-      dictzip -k $DATA_FILE
-      mv $DATA_FILE.gz $COMPRESSED_FILE
+      COMPRESSED_FILE="sample-data-dictionary-compressed.bin"
+      dictzip -k $INPUT_FILE
+      mv $INPUT_FILE.gz $COMPRESSED_FILE
       ;;
     "Delta encoding")
-      COMPRESSED_FILE="sample-data-delta-encoded.txt"
-      bzip2 -zk $DATA_FILE
-      mv $DATA_FILE.bz2 $COMPRESSED_FILE
+      COMPRESSED_FILE="sample-data-delta-encoded.bin"
+      bzip2 -zk $INPUT_FILE
+      mv $INPUT_FILE.bz2 $COMPRESSED_FILE
       ;;
     "Run-length encoding")
-      COMPRESSED_FILE="sample-data-run-length-encoded.txt"
-      rlencode -c $DATA_FILE $COMPRESSED_FILE
+      COMPRESSED_FILE="sample-data-run-length-encoded.bin"
+      rlencode -c $INPUT_FILE $COMPRESSED_FILE
+      ;;
+    "TSDB compression")
+      COMPRESSED_FILE="sample-data-tsdb-compressed.bin"
+      tsdbutil import $INPUT_FILE $COMPRESSED_FILE --compression
       ;;
   esac
   END_TIME=$(date +%s.%N)
@@ -43,7 +57,7 @@ do
   echo "Compression time: $COMPRESSION_TIME seconds"
 
   # Measure the compression ratio and output storage space
-  ORIGINAL_SIZE=$(wc -c < $DATA_FILE)
+  ORIGINAL_SIZE=$(wc -c < $INPUT_FILE)
   COMPRESSED_SIZE=$(wc -c < $COMPRESSED_FILE)
   COMPRESSION_RATIO=$(echo "scale=2; $ORIGINAL_SIZE / $COMPRESSED_SIZE" | bc)
   OUTPUT_SPACE=$(du -h $COMPRESSED_FILE | awk '{print $1}')
@@ -64,7 +78,10 @@ do
       bunzip2 -k $COMPRESSED_FILE
       ;;
     "Run-length encoding")
-      rldecode -c $COMPRESSED_FILE sample-data-decoded.txt
+      rldecode -c $COMPRESSED_FILE sample-data-decoded.bin
+      ;;
+    "TSDB compression")
+      tsdbutil export $COMPRESSED_FILE $OUTPUT_FILE
       ;;
   esac
   END_TIME=$(date +%s.%N)
@@ -76,6 +93,5 @@ do
   DECOMPRESSION_SPEED=$(echo "scale=2; $ORIGINAL_SIZE / $QUERY_TIME / 1000000" | bc)
   echo "Compression speed: $COMPRESSION_SPEED MB/s"
   echo "Decompression speed: $DECOMPRESSION_SPEED MB/s"
-
   echo "-------------------------------------"
 done
