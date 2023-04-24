@@ -43,7 +43,7 @@ cat /tmp/timescaledb-data.gz | gunzip | tsbs_load_timescaledb \
     --db-name="timescaledb"
     
 # Execute
-cat /tmp/queries/timescaledb-last-loc-queries.gz | gunzip | query_benchmarker_timescaledb --workers=8 --limit=1000 --hosts="localhost" --postgres="user=postgres sslmode=disable"  | tee query_timescaledb_timescaledb-last-loc-queries.out
-cat /tmp/queries/timescaledb-avg-load-queries.gz | gunzip | query_benchmarker_timescaledb --workers=8 --limit=1000 --hosts="localhost" --postgres="user=postgres sslmode=disable"  | tee query_timescaledb_timescaledb-avg-load-queries.out
-cat /tmp/queries/timescaledb-high-load-queries.gz | gunzip | query_benchmarker_timescaledb --workers=8 --limit=1000 --hosts="localhost" --postgres="user=postgres sslmode=disable"  | tee query_timescaledb_timescaledb-high-load-queries.out
-cat /tmp/queries/timescaledb-long-driving-session-queries.gz | gunzip | query_benchmarker_timescaledb --workers=8 --limit=1000 --hosts="localhost" --postgres="user=postgres sslmode=disable"  | tee query_timescaledb_timescaledb-long-driving-session-queries.out
+cat /tmp/timescaledb-queries-last-loc.gz | gunzip | tsbs_run_queries_timescaledb --workers=8 --hosts="localhost" --postgres="user=postgres sslmode=disable" --pass="timescale" | tee query_timescaledb_timescaledb-last-loc-queries.out
+cat /tmp/timescaledb-queries-avg-load.gz | gunzip | tsbs_run_queries_timescaledb --workers=8 --hosts="localhost" --postgres="user=postgres sslmode=disable" --pass="timescale" | tee query_timescaledb_timescaledb-avg-load-queries.out
+cat /tmp/timescaledb-queries-high-load.gz | gunzip | tsbs_run_queries_timescaledb --workers=8 --hosts="localhost" --postgres="user=postgres sslmode=disable" --pass="timescale" | tee query_timescaledb_timescaledb-high-load-queries.out
+cat /tmp/timescaledb-queries-long-driving-session.gz | gunzip | tsbs_run_queries_timescaledb --workers=8 --hosts="localhost" --postgres="user=postgres sslmode=disable" --pass="timescale" | tee query_timescaledb_timescaledb-long-driving-session-queries.out
