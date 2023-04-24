@@ -3,7 +3,6 @@
 # - 1) data and query generation
 # - 2) data loading/insertion
 # - 3) query execution
-cd $GOPATH/src/github.com/timescale/tsbs
 # generate data
 tsbs_generate_data --use-case="iot" --seed=123 --scale=10 \
     --timestamp-start="2016-01-01T00:00:00Z" \
@@ -40,7 +39,8 @@ tsbs_generate_queries --use-case="iot" --seed=123 --scale=10 \
 cat /tmp/timescaledb-data.gz | gunzip | tsbs_load_timescaledb \
     --host="localhost" --port=5432 --pass="timescale" \
     --user="postgres" --admin-db-name=postgres --workers=8  \
-    --in-table-partition-tag=false --chunk-time=8h --do-create-db=true
+    --in-table-partition-tag=true --chunk-time=1h --do-create-db=true \
+    --db-name="timescaledb"
     
 # Execute
 cat /tmp/queries/timescaledb-last-loc-queries.gz | gunzip | query_benchmarker_timescaledb --workers=8 --limit=1000 --hosts="localhost" --postgres="user=postgres sslmode=disable"  | tee query_timescaledb_timescaledb-last-loc-queries.out
