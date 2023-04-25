@@ -35,7 +35,7 @@ tsbs_generate_queries --use-case="iot" --seed=123 --scale=100 \
     --queries=1000 --query-type="long-driving-session" --format="timescaledb" \
     | gzip > /tmp/timescaledb-queries-long-driving-session.gz
 
-# Load Data Doesnt work
+# Load Data
 cat /tmp/timescaledb-data.gz | gunzip | tsbs_load_timescaledb \
     --host="localhost" --port=5432 --pass="timescale" \
     --user="postgres" --admin-db-name=postgres --workers=8 \
@@ -46,8 +46,8 @@ cat /tmp/timescaledb-data.gz | gunzip | tsbs_load_timescaledb \
     --batch-size=5000 --use-jsonb-tags=false \
     --create-metrics-table=true
     
-# Execute
-cat /tmp/timescaledb-queries-last-loc.gz | gunzip | tsbs_run_queries_timescaledb --workers=8 --hosts="localhost" --postgres="user=postgres sslmode=disable" --pass="timescale" | tee query_timescaledb_timescaledb-last-loc-queries.out
-cat /tmp/timescaledb-queries-avg-load.gz | gunzip | tsbs_run_queries_timescaledb --workers=8 --hosts="localhost" --postgres="user=postgres sslmode=disable" --pass="timescale" | tee query_timescaledb_timescaledb-avg-load-queries.out
-cat /tmp/timescaledb-queries-high-load.gz | gunzip | tsbs_run_queries_timescaledb --workers=8 --hosts="localhost" --postgres="user=postgres sslmode=disable" --pass="timescale" | tee query_timescaledb_timescaledb-high-load-queries.out
-cat /tmp/timescaledb-queries-long-driving-session.gz | gunzip | tsbs_run_queries_timescaledb --workers=8 --hosts="localhost" --postgres="user=postgres sslmode=disable" --pass="timescale" | tee query_timescaledb_timescaledb-long-driving-session-queries.out
+# Execute doesnt work
+cat /tmp/timescaledb-queries-last-loc.gz | gunzip | tsbs_run_queries_timescaledb --workers=8 --hosts="localhost" --postgres="user=postgres dbname=timescaledb sslmode=disable" --pass="timescale" --db-name=timescaledb | tee query_timescaledb_timescaledb-last-loc-queries.out
+cat /tmp/timescaledb-queries-avg-load.gz | gunzip | tsbs_run_queries_timescaledb --workers=8 --hosts="localhost" --postgres="user=postgres dbname=timescaledb sslmode=disable" --pass="timescale" --db-name=timescaledb | tee query_timescaledb_timescaledb-avg-load-queries.out
+cat /tmp/timescaledb-queries-high-load.gz | gunzip | tsbs_run_queries_timescaledb --workers=8 --hosts="localhost" --postgres="user=postgres dbname=timescaledb sslmode=disable" --pass="timescale" --db-name=timescaledb | tee query_timescaledb_timescaledb-high-load-queries.out
+cat /tmp/timescaledb-queries-long-driving-session.gz | gunzip | tsbs_run_queries_timescaledb --workers=8 --hosts="localhost" --postgres="user=postgres dbname=timescaledb sslmode=disable" --pass="timescale" --db-name=timescaledb | tee query_timescaledb_timescaledb-long-driving-session-queries.out
