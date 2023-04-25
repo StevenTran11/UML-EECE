@@ -46,7 +46,7 @@ cat /tmp/timescaledb-data.gz | gunzip | tsbs_load_timescaledb \
     --batch-size=5000 --use-jsonb-tags=false \
     --create-metrics-table=true
     
-# Execute doesnt work
+# Execute
 cat /tmp/timescaledb-queries-last-loc.gz | gunzip | tsbs_run_queries_timescaledb --workers=8 --hosts="localhost" --postgres="user=postgres dbname=timescaledb sslmode=disable" --pass="timescale" --db-name=timescaledb | tee query_timescaledb_timescaledb-last-loc-queries.out
 cat /tmp/timescaledb-queries-avg-load.gz | gunzip | tsbs_run_queries_timescaledb --workers=8 --hosts="localhost" --postgres="user=postgres dbname=timescaledb sslmode=disable" --pass="timescale" --db-name=timescaledb | tee query_timescaledb_timescaledb-avg-load-queries.out
 cat /tmp/timescaledb-queries-high-load.gz | gunzip | tsbs_run_queries_timescaledb --workers=8 --hosts="localhost" --postgres="user=postgres dbname=timescaledb sslmode=disable" --pass="timescale" --db-name=timescaledb | tee query_timescaledb_timescaledb-high-load-queries.out
