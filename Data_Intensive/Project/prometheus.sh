@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Define the Prometheus data directory
+PROMETHEUS_DATA_DIR="/usr/local/prometheus/data"
+
 # Download and install Prometheus
 VERSION="2.43.0"
 wget https://github.com/prometheus/prometheus/releases/download/v${VERSION}/prometheus-${VERSION}.linux-arm64.tar.gz

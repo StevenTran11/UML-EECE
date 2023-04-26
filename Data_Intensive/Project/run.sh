@@ -1,24 +1,13 @@
 #!/bin/bash
 
-
-# Install required packages
-sudo apt-get update -y
-sudo apt-get install -y python3-pip tar gzip bzip2 rlwrap
-# Create 30GB of data
-echo "Create Data"
-dd if=/dev/urandom of=sample-data.bin bs=1M count=1024
-
-# Define the Prometheus data directory
-PROMETHEUS_DATA_DIR="/path/to/prometheus/data"
-
 # Define the sample data set
-INPUT_FILE="sample-data.bin"
-OUTPUT_FILE="sample-data-compressed.bin"
+INPUT_FILE="sample-data.db"
 echo "Sample data set: $INPUT_FILE"
 echo "-------------------------------------"
 
 # Define the compression algorithms to test
-ALGORITHMS=("Block-based compression" "Dictionary-based compression" "Delta encoding" "Run-length encoding" "TSDB compression")
+# "Run-length encoding" doesnt work.
+ALGORITHMS=("Block-based compression" "Dictionary-based compression" "Delta encoding" "TSDB compression")
 
 # Test each compression algorithm
 for ALGORITHM in "${ALGORITHMS[@]}"
@@ -30,25 +19,25 @@ do
   START_TIME=$(date +%s.%N)
   case $ALGORITHM in
     "Block-based compression")
-      COMPRESSED_FILE="sample-data-block-compressed.bin"
+      COMPRESSED_FILE="sample-data-block-compressed"
       tar czf $COMPRESSED_FILE $INPUT_FILE
       ;;
     "Dictionary-based compression")
-      COMPRESSED_FILE="sample-data-dictionary-compressed.bin"
+      COMPRESSED_FILE="sample-data-dictionary-compressed.gz"
       dictzip -k $INPUT_FILE
-      mv $INPUT_FILE.gz $COMPRESSED_FILE
+      mv $INPUT_FILE.dz $COMPRESSED_FILE
       ;;
     "Delta encoding")
-      COMPRESSED_FILE="sample-data-delta-encoded.bin"
+      COMPRESSED_FILE="sample-data-delta-encoded.bz2"
       bzip2 -zk $INPUT_FILE
       mv $INPUT_FILE.bz2 $COMPRESSED_FILE
       ;;
-    "Run-length encoding")
-      COMPRESSED_FILE="sample-data-run-length-encoded.bin"
-      rlencode -c $INPUT_FILE $COMPRESSED_FILE
-      ;;
+    #"Run-length encoding")
+    #  COMPRESSED_FILE="sample-data-run-length-encoded"
+    #  rlencode -c $INPUT_FILE $COMPRESSED_FILE
+    #  ;;
     "TSDB compression")
-      COMPRESSED_FILE="sample-data-tsdb-compressed.bin"
+      COMPRESSED_FILE="sample-data-tsdb-compressed"
       tsdbutil import $INPUT_FILE $COMPRESSED_FILE --compression
       ;;
   esac
@@ -77,9 +66,9 @@ do
     "Delta encoding")
       bunzip2 -k $COMPRESSED_FILE
       ;;
-    "Run-length encoding")
-      rldecode -c $COMPRESSED_FILE sample-data-decoded.bin
-      ;;
+    #"Run-length encoding")
+    #  rldecode -c $COMPRESSED_FILE sample-data-decoded.bin
+    #  ;;
     "TSDB compression")
       tsdbutil export $COMPRESSED_FILE $OUTPUT_FILE
       ;;
