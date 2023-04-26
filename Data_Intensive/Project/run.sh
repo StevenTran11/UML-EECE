@@ -37,7 +37,7 @@ do
     #  rlencode -c $INPUT_FILE $COMPRESSED_FILE
     #  ;;
     "TSDB compression")
-      COMPRESSED_FILE="sample-data-tsdb-compressed"
+      COMPRESSED_FILE="sample-data-tsdb-compressed.db"
       tsdbutil import $INPUT_FILE $COMPRESSED_FILE --compression
       ;;
   esac

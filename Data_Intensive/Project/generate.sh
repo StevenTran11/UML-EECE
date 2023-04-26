@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Create 1GB of data
+# Create 200MB of data
 echo "Create Data"
 
 # Define variables
