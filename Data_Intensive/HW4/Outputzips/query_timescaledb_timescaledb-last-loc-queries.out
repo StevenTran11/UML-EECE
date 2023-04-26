@@ -1,0 +1,6 @@
+Run complete after 1000 queries with 8 workers (Overall query rate 7.41 queries/sec):
+TimescaleDB last location per truck:
+min:   902.75ms, med:  1040.89ms, mean:  1074.55ms, max: 1489.54ms, stddev:   152.68ms, sum: 1074.6sec, count: 1000
+all queries                        :
+min:   902.75ms, med:  1040.89ms, mean:  1074.55ms, max: 1489.54ms, stddev:   152.68ms, sum: 1074.6sec, count: 1000
+wall clock time: 134.958927sec
