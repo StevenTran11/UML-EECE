@@ -7,7 +7,7 @@ echo "-------------------------------------"
 
 # Define the compression algorithms to test
 # "Run-length encoding" doesnt work.
-ALGORITHMS=("Block-based compression" "Dictionary-based compression" "Delta encoding" "TSDB compression")
+ALGORITHMS=("Block-based compression" "Dictionary-based compression" "Delta encoding" "Run-length encoding" "TSDB compression")
 
 # Test each compression algorithm
 for ALGORITHM in "${ALGORITHMS[@]}"
@@ -32,10 +32,12 @@ do
       bzip2 -zk $INPUT_FILE
       mv $INPUT_FILE.bz2 $COMPRESSED_FILE
       ;;
-    #"Run-length encoding")
-    #  COMPRESSED_FILE="sample-data-run-length-encoded"
-    #  rlencode -c $INPUT_FILE $COMPRESSED_FILE
-    #  ;;
+    "Run-length encoding")
+      COMPRESSED_FILE="sample-data-run-length-encoded.bin"
+      #rlencode -c $INPUT_FILE $COMPRESSED_FILE
+      python3 rle.py $INPUT_FILE $COMPRESSED_FILE
+
+      ;;
     "TSDB compression")
       COMPRESSED_FILE="sample-data-tsdb-compressed.db"
       tsdbutil import $INPUT_FILE $COMPRESSED_FILE --compression
@@ -66,9 +68,10 @@ do
     "Delta encoding")
       bunzip2 -k $COMPRESSED_FILE
       ;;
-    #"Run-length encoding")
+    "Run-length encoding")
     #  rldecode -c $COMPRESSED_FILE sample-data-decoded.bin
-    #  ;;
+      python3 rle.py $COMPRESSED_FILE decoded-data.db -d
+      ;;
     "TSDB compression")
       tsdbutil export $COMPRESSED_FILE $OUTPUT_FILE
       ;;
