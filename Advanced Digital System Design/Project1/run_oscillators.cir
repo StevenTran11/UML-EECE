@@ -8,9 +8,6 @@
 .include ring_oscillator_6.cir
 .include ring_oscillator_7.cir
 
-* simulation parameters
-.param vhigh=1.2v
-
 * supply
 .global VDD VSS
 V0 VDD VSS dc 1.2v
@@ -30,7 +27,7 @@ x7 in out7 VDD VSS 7ring
 .temp 27
 
 * stimulus
-Vin in VSS pwl (0n 0v 9n 0v 10n vhigh 19n vhigh)
+Vin in VSS pwl (0n 0v 9n 0v 10n 1.2v 19n 1.2v)
 * simulation from 0n to 19n at 0.01n steps
 .tran 0.01n 19n 0n
 
@@ -39,12 +36,9 @@ Vin in VSS pwl (0n 0v 9n 0v 10n vhigh 19n vhigh)
 run
 * plot input and output
 plot in out0
-plot in out1
 plot in out2
-plot in out3
 plot in out4
-plot in out5
 plot in out6
-plot in out7
+plot in out1 out3 out5 out7
 .endc
 .end

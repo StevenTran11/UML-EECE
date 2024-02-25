@@ -84,6 +84,7 @@ begin
 					-- TODO: increment challenge
                     challenge_counter <= challenge_counter + 1;
 					-- Perform tasks for every possible challenge
+					-- Assert Reset Signal
 					counter_reset <= '1';
 					-- Provide the challenge to the ro_puf entity
 					challenge_data <= std_logic_vector(to_unsigned(challenge_counter, challenge'length));
@@ -96,8 +97,8 @@ begin
 						counter_enable <= '0';
 						wait_counter <= 0; -- Reset the counter after probe delay
 					end if
-					--Store the result in a RAM using the challenge as an address
-					
+					-- Store the result in a RAM using the challenge as an address
+					-- xxx <= store_response;
 				end if;
 			end if;
 		end if;
@@ -119,6 +120,8 @@ begin
 				-- TODO: set condition for next state
                 if last_challenge = '1' then
                     next_state <= all_done;
+				elsif wait_counter < counter_delay_max then
+					wait_counter <= wait_counter + 1;
                 else
                     next_state <= store;
                 end if;                
@@ -126,6 +129,13 @@ begin
 			when others => next_state <= reset_state;
 		end case;
 	end process transition_function;
-	
-	
+
+	ro_puf_inst: ro_puf
+        port map (
+            reset => reset,
+            enable => enable,
+            challenge => challenge,
+            response => store_response
+        );
+
 end architecture fsm;

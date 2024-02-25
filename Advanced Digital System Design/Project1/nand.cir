@@ -8,7 +8,7 @@ M3 Y A out1 VSS tn l=65n w=130n
 M4 out1 B VSS VSS tn l=65n w=130n
 
 * BSIM4 4.8.2 models
-.model tp pmos level=54 version=4.8.2 TOXE=2n
-.model tn nmos level=54 version=4.8.2 TOXE=2n
+.model tp pmos level=54 version=4.8.2 TOXE=3n
+.model tn nmos level=54 version=4.8.2 TOXE=3n
 
 .ends nand2
