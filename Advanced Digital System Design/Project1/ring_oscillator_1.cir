@@ -1,0 +1,15 @@
+* 2 ring oscillator
+
+.subckt 1ring A B VDD VSS
+M1 Y A VDD VDD tp l=63.7974n w=136.911n
+M2 Y B VDD VDD tp l=70.5245n w=123.001n
+M3 Y A node1 VSS tn l=63.304n w=133.534n
+M4 node1 B VSS VSS tn l=69.5088n w=137.678n
+
+M5 B out2 vdd vdd tp l=69.7196n w=248.429n
+M6 B out2 vss vss tn l=68.2295n w=129.281n
+
+.model tp pmos level=54 version=4.8.2 TOXE=3.09672n
+.model tn nmos level=54 version=4.8.2 TOXE=3.20144n
+
+.ends 2ring

@@ -1,0 +1,50 @@
+* include oscillators
+.include ring_oscillator_0.cir
+.include ring_oscillator_1.cir
+.include ring_oscillator_2.cir
+.include ring_oscillator_3.cir
+.include ring_oscillator_4.cir
+.include ring_oscillator_5.cir
+.include ring_oscillator_6.cir
+.include ring_oscillator_7.cir
+
+* simulation parameters
+.param vhigh=1.2v
+
+* supply
+.global VDD VSS
+V0 VDD VSS dc 1.2v
+V1 VSS 0 0
+
+* Instantiate all 8 oscillators with the same input voltage 'in' but different output names 'out1' through 'out7'
+x0 in out0 VDD VSS 0ring
+x1 in out1 VDD VSS 1ring
+x2 in out2 VDD VSS 2ring
+x3 in out3 VDD VSS 3ring
+x4 in out4 VDD VSS 4ring
+x5 in out5 VDD VSS 5ring
+x6 in out6 VDD VSS 6ring
+x7 in out7 VDD VSS 7ring
+
+*temperature
+.temp 27
+
+* stimulus
+Vin in VSS pwl (0n 0v 9n 0v 10n vhigh 19n vhigh)
+* simulation from 0n to 19n at 0.01n steps
+.tran 0.01n 19n 0n
+
+.control
+* simulation control block
+run
+* plot input and output
+plot in out0
+plot in out1
+plot in out2
+plot in out3
+plot in out4
+plot in out5
+plot in out6
+plot in out7
+.endc
+.end

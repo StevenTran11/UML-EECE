@@ -1,0 +1,19 @@
+* 4 ring oscillator
+
+.subckt 3ring A B VDD VSS
+M1 Y A VDD VDD tp l=69.3136n w=127.003n
+M2 Y B VDD VDD tp l=60.0055n w=122.311n
+M3 Y A node1 VSS tn l=68.0609n w=130.11n
+M4 node1 B VSS VSS tn l=65.3794n w=126.321n
+
+M5 out3 Y vdd vdd tp l=64.3477n w=252.892n
+M6 out3 Y vss vss tn l=64.7349n w=128.421n
+M7 out4 out3 vdd vdd tp l=73.3144n w=265.94n
+M8 out4 out3 vss vss tn l=72.1222n w=130.775n
+M9 B out4 vdd vdd tp l=67.5599n w=289.835n
+M10 B out4 vss vss tn l=69.1125n w=113.503n
+
+.model tp pmos level=54 version=4.8.2 TOXE=3.04285n
+.model tn nmos level=54 version=4.8.2 TOXE=2.97799n
+
+.ends 4ring

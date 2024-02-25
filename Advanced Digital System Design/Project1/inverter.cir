@@ -1,0 +1,10 @@
+*inverter
+.subckt inverter in out
+M1 out in vdd vdd tp l=65n w=260n
+M2 out in vss vss tn l=65n w=130n
+
+* BSIM4 4.8.2 models
+.model tp pmos level=54 version=4.8.2 TOXE=8n
+.model tn nmos level=54 version=4.8.2 TOXE=8n
+
+.ends inverter

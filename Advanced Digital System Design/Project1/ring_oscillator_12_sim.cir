@@ -1,0 +1,26 @@
+* run_ring_oscillator_12
+.include ring_oscillator_12.cir
+
+* simulation parameters
+.param vhigh=1.2v
+
+* supply
+.global vdd vss
+V0 vdd vss dc 1.2v
+V1 vss 0 0
+
+* 12ring oscillator instance
+x1 in out vdd vss 12ring
+
+* stimulus
+Vin in vss pwl (0n 0v 9n 0v 10n vhigh 19n vhigh)
+* simulation from 0n to 19n at 0.01n steps
+.tran 0.01n 19n 0n
+
+.control
+* simulation control block
+run
+* plot input and output
+plot in out
+.endc
+.end

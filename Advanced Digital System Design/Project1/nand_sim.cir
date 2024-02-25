@@ -1,0 +1,30 @@
+* run_nand2
+.include nand.cir
+
+* simulation parameters
+.param vhigh=1.2v
+
+* supply
+.global vdd vss
+V0 vdd vss dc vhigh
+V1 vss 0 0
+
+* NAND2 instance
+x1 A B Y VDD VSS nand2
+
+* stimulus
+Vin_A A VSS pwl (0n 0v 9n 0v 10n vhigh 19n vhigh)
+Vin_B B VSS pwl (0n 0v 4n 0v 5n vhigh 9n vhigh
++ 10n 0v 14n 0v 15n vhigh 19n vhigh)
+* simulation from 0n to 19n at 0.01n steps
+.tran 0.01n 19n 0n
+
+.control
+* Simulation control block
+run
+
+* plot a, b, and c with offsets for easy viewing
+plot {V(A)} {V(B)+2} {V(Y)+4}
+
+.endc
+.end

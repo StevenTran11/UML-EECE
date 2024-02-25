@@ -1,0 +1,38 @@
+*12 ring oscillator
+
+.subckt 12ring A B VDD VSS
+M1 Y A VDD VDD tp l=65n w=130n
+M2 Y B VDD VDD tp l=65n w=130n
+M3 Y A node1 VSS tn l=65n w=130n
+M4 node1 B VSS VSS tn l=65n w=130n
+
+M5 out2 Y vdd vdd tp l=65n w=260n
+M6 out2 Y vss vss tn l=65n w=130n
+M7 out3 out2 vdd vdd tp l=65n w=260n
+M8 out3 out2 vss vss tn l=65n w=130n
+M9 out4 out3 vdd vdd tp l=65n w=260n
+M10 out4 out3 vss vss tn l=65n w=130n
+M11 out5 out4 vdd vdd tp l=65n w=260n
+M12 out5 out4 vss vss tn l=65n w=130n
+M13 out6 out5 vdd vdd tp l=65n w=260n
+M14 out6 out5 vss vss tn l=65n w=130n
+M15 out7 out6 vdd vdd tp l=65n w=260n
+M16 out7 out6 vss vss tn l=65n w=130n
+M17 out8 out7 vdd vdd tp l=65n w=260n
+M18 out8 out7 vss vss tn l=65n w=130n
+M19 out9 out8 vdd vdd tp l=65n w=260n
+M20 out9 out8 vss vss tn l=65n w=130n
+M21 out10 out9 vdd vdd tp l=65n w=260n
+M22 out10 out9 vss vss tn l=65n w=130n
+M23 out11 out10 vdd vdd tp l=65n w=260n
+M24 out11 out10 vss vss tn l=65n w=130n
+M25 out12 out11 vdd vdd tp l=65n w=260n
+M26 out12 out11 vss vss tn l=65n w=130n
+M27 B out12 vdd vdd tp l=65n w=260n
+M28 B out12 vss vss tn l=65n w=130n
+
+* BSIM4 4.8.2 models
+.model tp pmos level=54 version=4.8.2 TOXE=2n
+.model tn nmos level=54 version=4.8.2 TOXE=2n
+
+.ends 12ring

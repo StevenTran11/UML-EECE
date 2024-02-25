@@ -1,0 +1,25 @@
+* 7 ring oscillator
+
+.subckt 6ring A B VDD VSS
+M1 Y A VDD VDD tp l=72.0409n w=140.825n
+M2 Y B VDD VDD tp l=62.0975n w=135.261n
+M3 Y A node1 VSS tn l=62.6427n w=128.702n
+M4 node1 B VSS VSS tn l=71.0985n w=130.207n
+
+M5 out3 Y vdd vdd tp l=68.246n w=267.622n
+M6 out3 Y vss vss tn l=65.8801n w=149.5n
+M7 out4 out3 vdd vdd tp l=59.2059n w=264.411n
+M8 out4 out3 vss vss tn l=66.6095n w=144.814n
+M9 out5 out4 vdd vdd tp l=63.4708n w=254.209n
+M10 out5 out4 vss vss tn l=56.6037n w=126.16n
+M11 out6 out5 vdd vdd tp l=65.5312n w=263.61n
+M12 out6 out5 vss vss tn l=65.669n w=139.312n
+M13 out7 out6 vdd vdd tp l=65.0598n w=258.659n
+M14 out7 out6 vss vss tn l=65.7808n w=129.768n
+M15 B out7 vdd vdd tp l=59.4661n w=262.874n
+M16 B out7 vss vss tn l=67.6138n w=133.569n
+
+.model tp pmos level=54 version=4.8.2 TOXE=3.06108n
+.model tn nmos level=54 version=4.8.2 TOXE=2.99353n
+
+.ends 7ring

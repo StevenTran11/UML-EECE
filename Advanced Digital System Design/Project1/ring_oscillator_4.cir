@@ -1,0 +1,21 @@
+* 5 ring oscillator
+
+.subckt 4ring A B VDD VSS
+M1 Y A VDD VDD tp l=58.5315n w=128.806n
+M2 Y B VDD VDD tp l=65.3565n w=114.835n
+M3 Y A node1 VSS tn l=56.7877n w=131.771n
+M4 node1 B VSS VSS tn l=70.7658n w=127.479n
+
+M5 out3 Y vdd vdd tp l=64.7043n w=269.144n
+M6 out3 Y vss vss tn l=68.8206n w=136.244n
+M7 out4 out3 vdd vdd tp l=70.2228n w=279.533n
+M8 out4 out3 vss vss tn l=72.2351n w=129.548n
+M9 out5 out4 vdd vdd tp l=71.0506n w=277.636n
+M10 out5 out4 vss vss tn l=64.5026n w=127.58n
+M11 B out5 vdd vdd tp l=69.7522n w=276.26n
+M12 B out5 vss vss tn l=65.8015n w=133.491n
+
+.model tp pmos level=54 version=4.8.2 TOXE=3.0225n
+.model tn nmos level=54 version=4.8.2 TOXE=2.9598n
+
+.ends 5ring
