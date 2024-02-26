@@ -1,5 +1,7 @@
 library ieee;
 use ieee.std_logic_1164.all;
+use ieee.math_real.log2;	-- bring in log2()
+use ieee.math_real.ceil;	-- bring in ceil()
 
 entity toplevel is
 	generic (
