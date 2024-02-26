@@ -6,7 +6,10 @@ use ieee.math_real.ceil;	-- bring in ceil()
 entity toplevel is
 	generic (
 		ro_length:	positive := 13;
-		ro_count:	positive := 16
+		ro_count:	positive := 16;
+		challenge_bits : positive := 8; -- Define the number of challenge bits
+		delay_us : positive := 10;      -- Define the delay in microseconds
+		clock_frequency : positive := 200	-- Define the clock frequency here (200 MHz)
 	);
 	port (
 		clock:	in	std_logic;	-- global clock input, 50 MHz clock
@@ -15,21 +18,19 @@ entity toplevel is
 end entity toplevel;
 
 architecture top of toplevel is
-	constant challenge_bits : positive := 8; -- Define the number of challenge bits
-    constant delay_us : positive := 10;      -- Define the delay in microseconds
-    constant clock_frequency : positive := 200; -- Define the clock frequency here (200 MHz)
-	
 	-- Signal declarations for internal signals
 	signal counter_enable : std_logic;
 	signal counter_reset : std_logic;
 	signal challenge : std_logic_vector(challenge_bits - 1 downto 0);
 	signal store_response : std_logic;
 	signal done : std_logic;
+	signal response : std_logic;
 	-- Add any other signals you may need here
 	signal reset_asserted : std_logic := '1';  -- Initial state of reset signal
 	signal enable_asserted : std_logic := '0';  -- Initial state of enable signal
 	signal challenge_data : std_logic_vector(challenge_bits - 1 downto 0);
 	signal enable : std_logic := '0';  -- Initial state of enable signal
+	signal reset1 : std_logic := '0';  -- Initial state of reset1 signal
 	
 	-- Component declaration for ro_puf
 	component ro_puf is
@@ -71,18 +72,18 @@ begin
 	control_process: process
 	begin
 		-- Step 1: Assert the reset signal to the ro_puf entity
-		reset <= reset_asserted;
+		reset1 <= reset_asserted;
 		wait for 10 ns;  -- Adjust delay as needed
 		-- Step 2: Provide the challenge to the ro_puf entity
 		challenge <= challenge_data;
 		-- Step 3: Deassert the reset signal to the ro_puf entity
-		reset <= not reset_asserted;
+		reset1 <= not reset_asserted;
 		wait for 10 ns;  -- Adjust delay as needed	
 		-- Step 4: Assert the enable signal to the ro_puf entity
 		enable <= enable_asserted;
 		wait for 10 ns;  -- Adjust delay as needed
-		-- Step 5: Wait for probe_delay µs
-		wait for probe_delay;
+		-- Step 5: Wait for delay_us µs
+		wait for delay_us * 1 us;
 		-- Step 6: Deassert the enable signal to the ro_puf entity
 		enable <= not enable_asserted;
 		-- Step 7: Store the result in a RAM using the challenge as an address
@@ -96,7 +97,7 @@ begin
             ro_count => ro_count
         )
         port map (
-            reset => reset,
+            reset => reset1,
             enable => enable,
             challenge => challenge,
             response => response
@@ -104,14 +105,9 @@ begin
 
     -- Instantiation of control unit
 	control_inst : control_unit
-		generic map (
-			challenge_bits => challenge_bits,
-			clock_frequency => clock_frequency,
-			delay_us => delay_us 
-		);
 		port map (
 			clock => clock,
-			reset => reset,
+			reset => reset1,
 			enable => enable,
 			counter_enable => counter_enable,
 			counter_reset => counter_reset,
