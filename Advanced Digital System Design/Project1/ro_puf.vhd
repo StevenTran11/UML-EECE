@@ -58,6 +58,13 @@ architecture puf of ro_puf is
 
 	-- oscillator outputs
 	signal osc_out: std_logic_vector(ro_count - 1 downto 0);
+	
+	component ring_oscillator is
+		port (
+		  enable:     in  std_logic;
+		  osc_out:    out std_logic
+		);
+	end component;
 
 begin
 	-- add assertion here to check if ro_count is a power of 2, feel free to
