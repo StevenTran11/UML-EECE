@@ -23,7 +23,7 @@ int main() {
     double tnln = 0.15; //NMOS transistor length variation
     double tnwn = 0.15; //NMOS transistor width variation
     double tpotv = 0.1; //PMOS transistor oxide layer thickness variation
-    double tnotv = 0.1; //MOS transistor oxide layer thickness variation
+    double tnotv = 0.1; //NMOS transistor oxide layer thickness variation
     double processLW = 0.065; //Process for Length Width
     double processTOXE = 0.05; //Process for Oxide Layer
 

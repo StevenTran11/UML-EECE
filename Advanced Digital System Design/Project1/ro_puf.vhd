@@ -117,7 +117,7 @@ begin
 			elsif rising_edge(osc_out(i)) then
 				if enable = '1' then
 					-- increment counter by 1
-					counter(i) <= counter(i) + 1;  -- Increment counter by 1
+					counter(i) <= counter(i) + 1;
 				end if;
 			end if;
 		end process ctr;

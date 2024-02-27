@@ -29,7 +29,7 @@ x7 in out7 VDD VSS 7ring
 * stimulus
 Vin in VSS pwl (0n 0v 9n 0v 10n 1.2v 19n 1.2v)
 * simulation from 0n to 19n at 0.01n steps
-.tran 0.01n 19n 0n
+.tran 0.001n 19n 0n
 
 .control
 * simulation control block

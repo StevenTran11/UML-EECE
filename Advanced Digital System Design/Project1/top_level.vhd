@@ -65,31 +65,37 @@ architecture top of toplevel is
 		);
 	end component;
     -- Component declaration for BRAM
-	
     -- Add BRAM component declaration here
 begin
-	-- Process for controlling interactions with the ro_puf entity
-	control_process: process
+	-- Step 1: Assert the reset signal to the ro_puf entity
+	-- Step 2: Provide the challenge to the ro_puf entity
+	control_process: process(counter_reset) is
 	begin
-		-- Step 1: Assert the reset signal to the ro_puf entity
-		reset1 <= reset_asserted;
-		wait for 10 ns;  -- Adjust delay as needed
-		-- Step 2: Provide the challenge to the ro_puf entity
-		challenge <= challenge_data;
-		-- Step 3: Deassert the reset signal to the ro_puf entity
-		reset1 <= not reset_asserted;
-		wait for 10 ns;  -- Adjust delay as needed	
-		-- Step 4: Assert the enable signal to the ro_puf entity
-		enable <= enable_asserted;
-		wait for 10 ns;  -- Adjust delay as needed
-		-- Step 5: Wait for delay_us µs
-		wait for delay_us * 1 us;
-		-- Step 6: Deassert the enable signal to the ro_puf entity
-		enable <= not enable_asserted;
-		-- Step 7: Store the result in a RAM using the challenge as an address
-
-		wait;
+		if rising_edge(counter_reset) then
+			reset1 <= reset_asserted;
+			challenge <= challenge_data;
+		end if;
 	end process control_process;
+	-- Step 3: Deassert the reset signal to the ro_puf entity
+	-- Step 4: Assert the enable signal to the ro_puf entity
+	-- Step 5: Wait for delay_us µs
+	-- Step 6: Deassert the enable signal to the ro_puf entity
+	deassert: process (counter_enable) is
+	begin
+		if rising_edge(counter_enable) then
+			reset1 <= not reset_asserted;	
+			enable <= enable_asserted;
+			wait for delay_us * 1 us;
+			enable <= not enable_asserted;
+		end if;
+	end process deassert;
+	-- Step 7: Store the result in a RAM using the challenge as an address
+	store_process: process (store_response) is
+	begin
+		if rising_edge(store_response) then
+			
+		end if;
+	end process store_process;
     -- Instantiation of ro_puf
     puf_inst : ro_puf
         generic map (
