@@ -81,7 +81,7 @@ package vga_data is
 	constant vga_res_1920x1080:	vga_timing := vga_res_data(0);
 	constant vga_res_640x480:	vga_timing := vga_res_data(1);
 	constant vga_res_800x600:	vga_timing := vga_res_data(2);	-- TODO: initialize
-	constant vga_res_default:	vga_timing := vga_res_data(3);	-- TODO: initialize to your
+	constant vga_res_default:	vga_timing := vga_res_data(0);	-- TODO: initialize to your
 												-- target resolution
 
 	---- TODO: some functions need to be implemented
@@ -228,8 +228,6 @@ package body vga_data is
 	begin
 		ret.x := point.x + 1;
 		ret.y := point.y;
-
-		-- TODO: add logic to increment y and reset y if needed
 		if ret.x = timing_range(vga_res, horizontal) then
             ret.y := ret.y + 1;
 			ret.x := 0;
