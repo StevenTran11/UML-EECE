@@ -1,5 +1,4 @@
 ---- this file is part of the ADS library
-
 library ads;
 use ads.ads_fixed.all;
 
@@ -10,6 +9,14 @@ package ads_complex_pkg is
 		re: ads_sfixed;
 		im: ads_sfixed;
 	end record ads_complex;
+
+	type complex_record is 
+	record
+		z : ads_complex;
+		c : ads_complex;
+		stage_data :natural;
+		stage_overflow : boolean;
+	end record;
 
 	---- functions
 	-- make a complex number
