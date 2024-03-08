@@ -4,7 +4,7 @@ use work.vga_data.all;
 
 entity to_complex is
     generic (
-        VGA_RESOLUTION_INDEX : natural := 2  -- Index of the VGA resolution in vga_res_data
+        vga_res:	vga_timing := vga_res_default
     );
     port (
         clock : in std_logic;
@@ -14,8 +14,8 @@ entity to_complex is
 end entity to_complex;
 
 architecture behavior of to_complex is
-    signal x_coordinate : integer range 0 to vga_res_data(VGA_RESOLUTION_INDEX).horizontal.active - 1;
-    signal y_coordinate : integer range 0 to vga_res_data(VGA_RESOLUTION_INDEX).vertical.active - 1;
+    signal x_coordinate : integer range 0 to vga_res.horizontal.active - 1;
+    signal y_coordinate : integer range 0 to vga_res.vertical.active - 1;
 begin
     process (clock)
     begin
