@@ -6,7 +6,7 @@ use work.ads_complex_pkg.all;
 entity mode is
     port (
         complex_input : in ads_complex;
-        mode : in std_logic;
+        mode : in std_logic; --SW9 on Board
         output_data : out complex_record
     );
 end entity mode;

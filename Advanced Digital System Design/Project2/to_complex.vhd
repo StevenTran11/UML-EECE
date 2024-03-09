@@ -1,15 +1,15 @@
 library ieee;
 use ieee.std_logic_1164.all;
-use work.vga_data.all;
+use work.vga_data.all;  -- Assuming vga_data contains the definition for vga_timing and coordinate
 
 entity to_complex is
     generic (
-        vga_res:	vga_timing := vga_res_default
+        vga_res: vga_timing := vga_res_default
     );
     port (
         clock : in std_logic;
         point : in coordinate;
-        complex_number : out complex
+        complex_number : out ads_complex
     );
 end entity to_complex;
 
@@ -19,12 +19,13 @@ architecture behavior of to_complex is
 begin
     process (clock)
     begin
-        if rising_edge(clock) then
-            -- Extract X and Y coordinates from the point
-            x_coordinate <= point.x;
-            y_coordinate <= point.y;
-            -- Convert X and Y coordinates into a complex number
-            complex_number <= to_complex_number(x_coordinate, y_coordinate);
-        end if;
+    if rising_edge(clock) then
+        -- Extract X and Y coordinates from the point
+        x_coordinate <= point.x;
+        y_coordinate <= point.y;
+        
+        -- Assuming to_complex_number function exists and converts to ads_sfixed
+        complex_number <= ads_cmplx(to_ads_sfixed(x_coordinate), to_ads_sfixed(y_coordinate));
+    end if;
     end process;
 end architecture behavior;
