@@ -15,14 +15,14 @@ entity project2 is
         mode            : in std_logic; --SW9 on Board PIN_F15
         -- Define ports here if needed
         reset           : in std_logic;
-        vga_clock       : in std_logic LOC="PIN_V10";;
+        vga_clock       : in std_logic; -- LOC="PIN_V10";;
         mode_signal     : in std_logic;
         -- VGA signals with LOC attribute
-        vga_red         : out std_logic_vector(0 downto 3) LOC="PIN_AA1, PIN_V1, PIN_Y2, PIN_Y1";  -- Red components (LSB to MSB)
-        vga_green       : out std_logic_vector(0 downto 3) LOC="PIN_W1, PIN_T2, PIN_R2, PIN_R1";  -- Green components (LSB to MSB)
-        vga_blue        : out std_logic_vector(0 downto 3) LOC="PIN_P1, PIN_T1, PIN_P4, PIN_N2";   -- Blue components (LSB to MSB)
-        h_syncff          : out std_logic LOC="PIN_N3";
-        v_syncff          : out std_logic LOC="PIN_N1"
+        vga_red         : out std_logic_vector(0 downto 3); --LOC="PIN_AA1, PIN_V1, PIN_Y2, PIN_Y1";  -- Red components (LSB to MSB)
+        vga_green       : out std_logic_vector(0 downto 3); --LOC="PIN_W1, PIN_T2, PIN_R2, PIN_R1";  -- Green components (LSB to MSB)
+        vga_blue        : out std_logic_vector(0 downto 3); --LOC="PIN_P1, PIN_T1, PIN_P4, PIN_N2";   -- Blue components (LSB to MSB)
+        h_syncff          : out std_logic; -- LOC="PIN_N3";
+        v_syncff          : out std_logic --LOC="PIN_N1"
         );
 end entity project2;
 
