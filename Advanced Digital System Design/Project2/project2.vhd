@@ -12,6 +12,7 @@ entity project2 is
         vga_res: vga_timing := vga_res_default
     );
     port (
+        mode            : in std_logic; --SW9 on Board PIN_F15
         -- Define ports here if needed
         reset           : in std_logic;
         vga_clock       : in std_logic LOC="PIN_V10";;
@@ -138,7 +139,7 @@ begin
     mode_inst : mode
         port map (
             complex_input => complex_input,
-            mode => mode_signal,
+            mode => mode,
             output_data => stage_outputs(-1)
         );
 
