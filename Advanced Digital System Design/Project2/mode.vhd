@@ -1,12 +1,12 @@
 library ieee;
 use ieee.std_logic_1164.all;
-use work.ads.all;
-use work.ads_complex_pkg.all;
+use ads.ads.all;
+use ads.ads_complex.all;
 
 entity mode is
     port (
         complex_input : in ads_complex;
-        mode : in std_logic; --SW9 on Board
+        mode : in std_logic ; --SW9 on Board
         output_data : out complex_record
     );
 end entity mode;

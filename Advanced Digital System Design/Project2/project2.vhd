@@ -2,8 +2,10 @@ library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 library ads;
+library vga;
 use ads.ads_fixed.all;
-use ads.ads_complex.all;
+USE vga.vga_data.ALL;
+use vga.ads_complex.all;
 
 entity project2 is
     generic (
