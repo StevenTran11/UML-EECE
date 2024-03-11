@@ -21,9 +21,9 @@ entity project2 is
         vga_clock       : in std_logic; -- LOC="PIN_V10";;
         mode_signal     : in std_logic;
         -- VGA signals
-        vga_red         : out std_logic_vector(0 downto 3); --LOC="PIN_AA1, PIN_V1, PIN_Y2, PIN_Y1";  -- Red components (LSB to MSB)
-        vga_green       : out std_logic_vector(0 downto 3); --LOC="PIN_W1, PIN_T2, PIN_R2, PIN_R1";  -- Green components (LSB to MSB)
-        vga_blue        : out std_logic_vector(0 downto 3); --LOC="PIN_P1, PIN_T1, PIN_P4, PIN_N2";   -- Blue components (LSB to MSB)
+        vga_red         : out std_logic_vector(3 downto 0); --LOC="PIN_AA1, PIN_V1, PIN_Y2, PIN_Y1";  -- Red components (LSB to MSB)
+        vga_green       : out std_logic_vector(3 downto 0); --LOC="PIN_W1, PIN_T2, PIN_R2, PIN_R1";  -- Green components (LSB to MSB)
+        vga_blue        : out std_logic_vector(3 downto 0); --LOC="PIN_P1, PIN_T1, PIN_P4, PIN_N2";   -- Blue components (LSB to MSB)
         h_syncff          : out std_logic; -- LOC="PIN_N3";
         v_syncff          : out std_logic --LOC="PIN_N1"
     );
@@ -108,9 +108,9 @@ architecture Behavioral of project2 is
 	signal point : coordinate;
 	signal point_valid : boolean;
 	signal complex_input : ads_complex;
-	signal h_sync, v_sync : std_logic_vector(-1 to total_stages + entities - 1);
+	signal h_sync, v_sync : std_logic_vector(0 to total_stages + entities);
 	type Complex_Record_Array is array (natural range <>) of Complex_Record;
-	signal stage_outputs : Complex_Record_Array(-1 to total_stages - 1);
+	signal stage_outputs : Complex_Record_Array(0 to total_stages);
 
 begin
 
@@ -125,8 +125,8 @@ begin
             reset => reset,
             point => point,
             point_valid => point_valid,
-            h_sync => h_sync(-1),
-            v_sync => v_sync(-1)
+            h_sync => h_sync(0),
+            v_sync => v_sync(0)
         );
 
         to_complex_inst : to_complex
@@ -143,11 +143,11 @@ begin
         port map (
             complex_input => complex_input,
             mode => mode_in,
-            output_data => stage_outputs(-1)
+            output_data => stage_outputs(0)
         );
 
             -- Generate pipeline stages
-    pipeline_stages: for i in 0 to total_stages - 1 generate
+    pipeline_stages: for i in 1 to total_stages generate
     pipeline_stage_inst : pipeline_stage
         generic map (
             threshold => threshold,
@@ -169,14 +169,14 @@ begin
         port map (
             clk => vga_clock,
             reset => reset,
-            stage_input => stage_outputs(total_stages - 1),
+            stage_input => stage_outputs(total_stages),
             vga_red => vga_red,
             vga_green => vga_green,
             vga_blue => vga_blue
         );
 
     -- Generate flip-flop instances
-    flipflop_instances: for i in 0 to total_stages + entities - 1 generate
+    flipflop_instances: for i in 1 to total_stages + entities  generate
         flipflop_inst : FlipFlop
             port map (
                 clk => vga_clock,
@@ -188,6 +188,6 @@ begin
             );
     end generate flipflop_instances;
 
-    h_syncff <= h_sync(total_stages + entities - 1);  -- Connect to the last flip-flop output
-    v_syncff <= v_sync(total_stages + entities - 1);  -- Connect to the last flip-flop output
+    h_syncff <= h_sync(total_stages + entities);  -- Connect to the last flip-flop output
+    v_syncff <= v_sync(total_stages + entities);  -- Connect to the last flip-flop output
 end architecture Behavioral;

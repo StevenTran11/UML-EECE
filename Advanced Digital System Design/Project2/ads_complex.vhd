@@ -119,4 +119,15 @@ package body ads_complex_pkg is
         return abs_value;
     end function abs2;
 
+	function ads_cmplx (
+    	re, im: in ads_sfixed
+		) return ads_complex 
+	is
+    	variable ret: ads_complex;
+	begin
+		ret.re := re;
+		ret.im := im;
+		return ret;
+	end function ads_cmplx;
+
 end package body ads_complex_pkg;

@@ -7,7 +7,7 @@ use ads.ads_complex_pkg.all;
 
 entity color_map is
     generic (
-        total_stages : natural := 25
+        total_stages : natural := 0
     );
     port (
         clk    : in  std_logic;
