@@ -3,11 +3,11 @@ use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 library ads;
 use ads.ads_fixed.all;
-use ads.ads_complex.all;
+use ads.ads_complex_pkg.all;
 
 entity pipeline_stage is
     generic (
-        threshold : ads_sfixed := 4; 
+        threshold : ads_sfixed := to_ads_sfixed(4);
         stage_number : natural 
     );
     port (
@@ -27,8 +27,8 @@ begin
         if reset = '0' then
         -- reset pipeline stage
         stage_output.stage_data <= 0; -- Initialize to 0
-        stage_output.c <= 0; -- Initialize to 0
-        stage_output.z <= 0; -- Initialize to 0
+        stage_output.c <= complex_zero; -- Initialize to 0
+        stage_output.z <= complex_zero; -- Initialize to 0
         stage_output.stage_overflow <= false; -- Initialize to false
         elsif rising_edge(clk) then
             if stage_input.stage_overflow = true then

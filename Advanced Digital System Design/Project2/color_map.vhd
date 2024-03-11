@@ -1,5 +1,9 @@
 library ieee;
-use ieee.std_logic_1164.all;
+USE ieee.std_logic_1164.ALL;
+USE ieee.numeric_std.ALL;
+library ads;
+use ads.ads_fixed.all;
+use ads.ads_complex_pkg.all;
 
 entity color_map is
     generic (
@@ -24,7 +28,7 @@ begin
             vga_green <= (others => '0');
             vga_blue  <= (others => '0');
         elsif rising_edge(clk) then
-            if stage_input.stage_data = to_integer(total_stages) then  -- Assuming total_stages is declared elsewhere
+            if stage_input.stage_data = total_stages then  -- Assuming total_stages is declared elsewhere
             -- Black color for maximum iterations
             vga_red   <= (others => '0');
             vga_green <= (others => '0');

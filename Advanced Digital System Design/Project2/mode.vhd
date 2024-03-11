@@ -1,7 +1,8 @@
 library ieee;
 use ieee.std_logic_1164.all;
-use ads.ads.all;
-use ads.ads_complex.all;
+library ads;
+USE ads.ads_fixed.all;
+USE ads.ads_complex_pkg.all;
 
 entity mode is
     port (

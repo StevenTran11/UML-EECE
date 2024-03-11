@@ -1,6 +1,10 @@
 library ieee;
 use ieee.std_logic_1164.all;
-use vga.vga_data.all;  -- Assuming vga_data contains the definition for vga_timing and coordinate
+library vga;
+library ads;
+USE vga.vga_data.all;
+USE ads.ads_fixed.all;
+USE ads.ads_complex_pkg.all;
 
 entity to_complex is
     generic (

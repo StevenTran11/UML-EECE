@@ -1,4 +1,7 @@
 ---- this file is part of the ADS library
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
 library ads;
 use ads.ads_fixed.all;
 
