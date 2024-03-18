@@ -19,7 +19,6 @@ entity project2 is
         -- Define ports here if needed
         reset           : in std_logic;
         vga_clock       : in std_logic; -- LOC="PIN_V10";;
-        mode_signal     : in std_logic;
         -- VGA signals
         vga_red         : out std_logic_vector(3 downto 0); --LOC="PIN_AA1, PIN_V1, PIN_Y2, PIN_Y1";  -- Red components (LSB to MSB)
         vga_green       : out std_logic_vector(3 downto 0); --LOC="PIN_W1, PIN_T2, PIN_R2, PIN_R1";  -- Green components (LSB to MSB)
@@ -32,6 +31,14 @@ end entity project2;
 architecture Behavioral of project2 is
 
     -- Component declarations
+	 component PLL is
+        port (
+            inclk0 : in std_logic;
+            c0 : out std_logic
+            -- Add other PLL ports as needed
+        );
+    end component;
+	 
     component vga_fsm is
         generic (
             vga_res: vga_timing := vga_res_default
@@ -111,17 +118,26 @@ architecture Behavioral of project2 is
 	signal h_sync, v_sync : std_logic_vector(0 to total_stages + entities);
 	type Complex_Record_Array is array (natural range <>) of Complex_Record;
 	signal stage_outputs : Complex_Record_Array(0 to total_stages);
+	signal pll_output_signal : std_logic;
 
 begin
 
     -- Instantiation of sub-entities and connections
+	 -- Instantiate PLL
+    PLL_inst : PLL
+        port map (
+            inclk0 => vga_clock,
+            c0 => pll_output_signal
+            -- Connect other PLL ports as needed
+        );
+	 
     vga_fsm_inst : vga_fsm
         generic map (
             -- Assign generics if needed
             vga_res => vga_res
         )
         port map (
-            vga_clock => vga_clock, --EDIT CLOCK needs to be 50MHz from board
+            vga_clock => pll_output_signal,
             reset => reset,
             point => point,
             point_valid => point_valid,
@@ -134,7 +150,7 @@ begin
           vga_res => vga_res
         )
         port map (
-          clock => vga_clock,
+          clock => pll_output_signal,
           point => point,
           complex_number => complex_input
         );
@@ -155,7 +171,7 @@ begin
         )
         port map (
             reset => reset,
-            clk => vga_clock,
+            clk => pll_output_signal,
             stage_input => stage_outputs(i-1),
             stage_output => stage_outputs(i)
         );
@@ -167,7 +183,7 @@ begin
             total_stages => total_stages
         )
         port map (
-            clk => vga_clock,
+            clk => pll_output_signal,
             reset => reset,
             stage_input => stage_outputs(total_stages),
             vga_red => vga_red,
@@ -179,7 +195,7 @@ begin
     flipflop_instances: for i in 1 to total_stages + entities  generate
         flipflop_inst : FlipFlop
             port map (
-                clk => vga_clock,
+                clk => pll_output_signal,
                 reset => reset,
                 h_sync => h_sync(i-1),
                 v_sync => v_sync(i-1),
