@@ -39,13 +39,9 @@ begin
             -- Optionally, set any other initial states
         elsif rising_edge(vga_clock) then
             -- Update current_point and sync pulses based on VGA timing
-            if x_visible(current_point, vga_res) and y_visible(current_point, vga_res) then
-                point <= current_point;
-                point_valid <= true;
-            else
-                point_valid <= false;
-            end if;
-            
+            point <= current_point;
+            point_valid <= point_visible(current_point);
+
             h_sync <= do_horizontal_sync(current_point, vga_res);
             v_sync <= do_vertical_sync(current_point, vga_res);
 
