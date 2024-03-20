@@ -17,7 +17,7 @@ architecture Behavioral of FlipFlop is
 begin
     process(clk, reset)
     begin
-        if reset = '1' then
+        if reset = '0' then
             h_sync_reg <= '0';
             v_sync_reg <= '0';
         elsif rising_edge(clk) then

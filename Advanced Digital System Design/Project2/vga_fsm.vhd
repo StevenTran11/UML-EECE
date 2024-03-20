@@ -31,7 +31,7 @@ begin
 	-- use vga_data functions and types to make your life easier
 	process(vga_clock, reset)
     begin
-        if reset = '1' then
+        if reset = '0' then
             -- Reset the FSM and any internal signals
             current_point <= make_coordinate(0, 0);
             h_sync_pulse <= '0';

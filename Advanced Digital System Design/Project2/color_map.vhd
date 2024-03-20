@@ -23,7 +23,7 @@ architecture rtl of color_map is
 begin
     process(clk, reset) is
     begin
-        if reset = '1' then
+        if reset = '0' then
             vga_red   <= (others => '0');
             vga_green <= (others => '0');
             vga_blue  <= (others => '0');
