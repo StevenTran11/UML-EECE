@@ -32,19 +32,15 @@ begin
         if reset = '0' then
             -- Reset the FSM and any internal signals
             current_point <= make_coordinate(0, 0);
-            h_sync <= '0';
-            v_sync <= '0';
+            --h_sync <= '1';
+            --v_sync <= '1';
             -- Optionally, set any other initial states
         elsif rising_edge(vga_clock) then
-            -- Update current_point and sync pulses based on VGA timing
-            point <= current_point;
-            point_valid <= point_visible(current_point);
-
-            h_sync <= do_horizontal_sync(current_point, vga_res);
-            v_sync <= do_vertical_sync(current_point, vga_res);
-
-            -- Update current_point for the next cycle
             current_point <= next_coordinate(current_point, vga_res);
         end if;
     end process;
+	h_sync <= do_horizontal_sync(current_point, vga_res);
+	v_sync <= do_vertical_sync(current_point, vga_res);
+	point <= current_point;
+	point_valid <= point_visible(current_point);
 end architecture fsm;
