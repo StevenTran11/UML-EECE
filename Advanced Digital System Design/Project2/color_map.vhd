@@ -13,6 +13,7 @@ entity color_map is
         clk    : in  std_logic;
         reset  : in  std_logic;
         stage_input : in complex_record;
+        point_valid : in boolean;
         vga_red   : out std_logic_vector(3 downto 0);  -- Red component (4 bits)
         vga_green : out std_logic_vector(3 downto 0);  -- Green component (4 bits)
         vga_blue  : out std_logic_vector(3 downto 0)  -- Blue component (4 bits)
@@ -28,16 +29,20 @@ begin
             vga_green <= (others => '0');
             vga_blue  <= (others => '0');
         elsif rising_edge(clk) then
-            if stage_input.stage_data < total_stages - 2 then  -- Assuming total_stages is declared elsewhere
+            if not point_valid then
+                vga_red   <= (others => '0');
+                vga_green <= (others => '0');
+                vga_blue  <= (others => '0');  -- Set all components to 0 for black
+            elsif stage_input.stage_data = total_stages then  -- Assuming total_stages is declared elsewhere
             -- Black color for maximum iterations
-            vga_red   <= (others => '0');
-            vga_green <= (others => '0');
-            vga_blue  <= (others => '0');  -- Set all components to 0 for black
+                vga_red   <= (others => '0');
+                vga_green <= (others => '0');
+                vga_blue  <= (others => '0');  -- Set all components to 0 for black
             else
             -- White color for non-maximum iterations
-            vga_red   <= (others => '1');
-            vga_green <= (others => '1');
-            vga_blue  <= (others => '1');
+                vga_red   <= (others => '1');
+                vga_green <= (others => '1');
+                vga_blue  <= (others => '1');
             end if;
         end if;
     end process;

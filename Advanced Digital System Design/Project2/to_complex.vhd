@@ -22,7 +22,7 @@ architecture behavior of to_complex is
     signal y_coordinate : ads_sfixed;
 begin
     x_coordinate <= to_ads_sfixed(3.2/real(vga_res.horizontal.active)) * to_ads_sfixed(point.x) - to_ads_sfixed(2.2);
-    y_coordinate <= to_ads_sfixed(1.2) - to_ads_fixed(2.4/real(vga_res.vertical.active)) * to_ads_sfixed(point.y);
+    y_coordinate <= to_ads_sfixed(1.2) - to_ads_sfixed(2.4/real(vga_res.vertical.active)) * to_ads_sfixed(point.y);
     process (clock)
     begin
         if rising_edge(clock) then

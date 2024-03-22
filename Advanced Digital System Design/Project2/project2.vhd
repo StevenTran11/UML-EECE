@@ -94,6 +94,7 @@ architecture Behavioral of project2 is
             clk             : in std_logic;
             reset           : in std_logic;
             stage_input     : in complex_record;
+            point_valid     : in boolean;
             vga_red         : out std_logic_vector(3 downto 0);  -- Red component (4 bits)
             vga_green       : out std_logic_vector(3 downto 0);  -- Green component (4 bits)
             vga_blue        : out std_logic_vector(3 downto 0)
@@ -186,6 +187,7 @@ begin
             clk => pll_output_signal,
             reset => reset,
             stage_input => stage_outputs(total_stages),
+            point_valid => point_valid,
             vga_red => vga_red,
             vga_green => vga_green,
             vga_blue => vga_blue
