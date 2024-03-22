@@ -28,7 +28,7 @@ begin
             vga_green <= (others => '0');
             vga_blue  <= (others => '0');
         elsif rising_edge(clk) then
-            if stage_input.stage_data = total_stages then  -- Assuming total_stages is declared elsewhere
+            if stage_input.stage_data < total_stages - 2 then  -- Assuming total_stages is declared elsewhere
             -- Black color for maximum iterations
             vga_red   <= (others => '0');
             vga_green <= (others => '0');
