@@ -18,18 +18,16 @@ entity to_complex is
 end entity to_complex;
 
 architecture behavior of to_complex is
-    signal x_coordinate : integer range 0 to vga_res.horizontal.active - 1;
-    signal y_coordinate : integer range 0 to vga_res.vertical.active - 1;
+    signal x_coordinate : ads_sfixed;
+    signal y_coordinate : ads_sfixed;
 begin
+    x_coordinate <= to_ads_sfixed(3.2/real(vga_res.horizontal.active)) * to_ads_sfixed(point.x) - to_ads_sfixed(2.2);
+    y_coordinate <= to_ads_sfixed(1.2) - to_ads_fixed(2.4/real(vga_res.vertical.active)) * to_ads_sfixed(point.y);
     process (clock)
     begin
-    if rising_edge(clock) then
-        -- Extract X and Y coordinates from the point
-        x_coordinate <= point.x;
-        y_coordinate <= point.y;
-        
-        -- Assuming to_complex_number function exists and converts to ads_sfixed
-        complex_number <= ads_cmplx(to_ads_sfixed(x_coordinate), to_ads_sfixed(y_coordinate));
-    end if;
+        if rising_edge(clock) then
+            -- Assuming to_complex_number function exists and converts to ads_sfixed
+            complex_number <= ads_cmplx(x_coordinate, y_coordinate);
+        end if;
     end process;
 end architecture behavior;
