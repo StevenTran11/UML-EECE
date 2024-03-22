@@ -24,8 +24,6 @@ architecture fsm of vga_fsm is
 	-- any internal signals you may need
 	-- Define internal signals
 	signal current_point: coordinate := make_coordinate(0, 0);
-	signal h_sync_pulse: std_logic := '0';
-	signal v_sync_pulse: std_logic := '0';
 begin
 	-- implement methodology to drive outputs here
 	-- use vga_data functions and types to make your life easier
@@ -34,8 +32,8 @@ begin
         if reset = '0' then
             -- Reset the FSM and any internal signals
             current_point <= make_coordinate(0, 0);
-            h_sync_pulse <= '0';
-            v_sync_pulse <= '0';
+            h_sync <= '0';
+            v_sync <= '0';
             -- Optionally, set any other initial states
         elsif rising_edge(vga_clock) then
             -- Update current_point and sync pulses based on VGA timing
