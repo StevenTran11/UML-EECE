@@ -12,13 +12,13 @@ entity project2 is
         total_stages : natural := 25;  -- Adjust the number of pipeline stages as needed
         entities     : natural := 4;
         vga_res: vga_timing := vga_res_default;
-		  threshold : ads_sfixed := to_ads_sfixed(4)
+		threshold : ads_sfixed := to_ads_sfixed(4)
     );
     port (
         mode_in         : in std_logic; --SW9 on Board PIN_F15
         -- Define ports here if needed
         reset           : in std_logic;
-        vga_clock       : in std_logic; -- LOC="PIN_V11";;
+        vga_clock       : in std_logic; -- LOC="PIN_V10";;
         -- VGA signals
         vga_red         : out std_logic_vector(3 downto 0); --LOC="PIN_AA1, PIN_V1, PIN_Y2, PIN_Y1";  -- Red components (LSB to MSB)
         vga_green       : out std_logic_vector(3 downto 0); --LOC="PIN_W1, PIN_T2, PIN_R2, PIN_R1";  -- Green components (LSB to MSB)
@@ -177,25 +177,21 @@ begin
         );
     end generate pipeline_stages;
 
---      -- Instantiate color map only for the last pipeline output
---    color_map_inst : color_map
---        generic map (
---            total_stages => total_stages
---        )
---        port map (
---            clk => pll_output_signal,
---            reset => reset,
---            stage_input => stage_outputs(total_stages),
---            vga_red => vga_red,
---            vga_green => vga_green,
---            vga_blue => vga_blue
---        );
-		
-	vga_red <= "1111" when point_valid else "0000";
-	vga_blue <= "1111" when point_valid else "0000";
-	vga_green <= "1111" when point_valid else "0000";
+      -- Instantiate color map only for the last pipeline output
+    color_map_inst : color_map
+        generic map (
+            total_stages => total_stages
+        )
+        port map (
+            clk => pll_output_signal,
+            reset => reset,
+            stage_input => stage_outputs(total_stages),
+            vga_red => vga_red,
+            vga_green => vga_green,
+            vga_blue => vga_blue
+        );
 
-	-- Generate flip-flop instances
+    -- Generate flip-flop instances
     flipflop_instances: for i in 1 to total_stages + entities  generate
         flipflop_inst : FlipFlop
             port map (
@@ -208,6 +204,6 @@ begin
             );
     end generate flipflop_instances;
 
-    h_syncff <= h_sync(0);  -- Connect to the last flip-flop output
-    v_syncff <= v_sync(0);  -- Connect to the last flip-flop output
+    h_syncff <= h_sync(total_stages + entities);  -- Connect to the last flip-flop output
+    v_syncff <= v_sync(total_stages + entities);  -- Connect to the last flip-flop output
 end architecture Behavioral;

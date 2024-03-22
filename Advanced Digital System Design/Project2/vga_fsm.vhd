@@ -32,8 +32,6 @@ begin
         if reset = '0' then
             -- Reset the FSM and any internal signals
             current_point <= make_coordinate(0, 0);
-            --h_sync <= '1';
-            --v_sync <= '1';
             -- Optionally, set any other initial states
         elsif rising_edge(vga_clock) then
             current_point <= next_coordinate(current_point, vga_res);
