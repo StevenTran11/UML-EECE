@@ -100,7 +100,7 @@ architecture Behavioral of project2 is
             point_valid     : in boolean;
             vga_red         : out std_logic_vector(3 downto 0);  -- Red component (4 bits)
             vga_green       : out std_logic_vector(3 downto 0);  -- Green component (4 bits)
-            vga_blue        : out std_logic_vector(3 downto 0)
+            vga_blue        : out std_logic_vector(3 downto 0)   -- Blue component (4 bits)
         );
     end component color_map;
 
