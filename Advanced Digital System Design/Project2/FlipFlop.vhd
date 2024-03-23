@@ -7,8 +7,10 @@ entity FlipFlop is
         reset : in  STD_LOGIC;
         h_sync: in  STD_LOGIC;
         v_sync: in  STD_LOGIC;
+        point_valid_in: in  boolean;
         h_sync_out: out STD_LOGIC;
-        v_sync_out: out STD_LOGIC
+        v_sync_out: out STD_LOGIC;
+        point_valid_out: out  boolean
     );
 end FlipFlop;
 
@@ -20,9 +22,11 @@ begin
         if reset = '0' then
             h_sync_reg <= '0';
             v_sync_reg <= '0';
+            point_valid_out <= false;
         elsif rising_edge(clk) then
             h_sync_reg <= h_sync;
             v_sync_reg <= v_sync;
+            point_valid_out <= point_valid_in;
         end if;
     end process;
 

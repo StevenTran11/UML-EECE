@@ -126,11 +126,15 @@ package vga_data is
 			vga_res:	in	vga_timing := vga_res_default
 		) return std_logic;
 
+	type timing_select is (horizontal, vertical);
+	function timing_range (
+			vga_res:	in	vga_timing;
+			timing:		in	timing_select
+		) return natural;
+
 end package vga_data;
 
 package body vga_data is
-
-	type timing_select is (horizontal, vertical);
 
 	function timing_range (
 			vga_res:	in	vga_timing;
@@ -230,11 +234,12 @@ package body vga_data is
 		if ret.x = timing_range(vga_res, horizontal) then
 			ret.y := ret.y + 1;
 			ret.x := 0;
-            if ret.y = timing_range(vga_res, vertical) then
-                ret.y := 0; -- Reset y-coordinate if it exceeds vertical timing range
-            end if;
-		end if;
 
+		end if;
+		
+		if ret.y = timing_range(vga_res, vertical) then
+			ret.y := 0; -- Reset y-coordinate if it exceeds vertical timing range
+		end if;
 
 		return ret;
 	end function next_coordinate;

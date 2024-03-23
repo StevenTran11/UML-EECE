@@ -25,11 +25,11 @@ begin
     stage: process(clk, reset) is
     begin
         if reset = '0' then
-        -- reset pipeline stage
-        stage_output.stage_data <= 0; -- Initialize to 0
-        stage_output.c <= complex_zero; -- Initialize to 0
-        stage_output.z <= complex_zero; -- Initialize to 0
-        stage_output.stage_overflow <= false; -- Initialize to false
+			-- reset pipeline stage
+			stage_output.stage_data <= 0; -- Initialize to 0
+			stage_output.c <= complex_zero; -- Initialize to 0
+			stage_output.z <= complex_zero; -- Initialize to 0
+			stage_output.stage_overflow <= false; -- Initialize to false
         elsif rising_edge(clk) then
             if stage_input.stage_overflow = true then
                 stage_output.stage_data <= stage_input.stage_data;
@@ -39,7 +39,7 @@ begin
             stage_output.c <= stage_input.c;
             stage_output.z <= stage_input.z * stage_input.z + stage_input.c;
             if abs2(stage_input.z) > threshold then
-                stage_output.stage_overflow <= stage_input.stage_overflow;
+                stage_output.stage_overflow <= true;
             else
                 stage_output.stage_overflow <= false;
             end if;
