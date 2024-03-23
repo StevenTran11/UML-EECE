@@ -126,11 +126,15 @@ package vga_data is
 			vga_res:	in	vga_timing := vga_res_default
 		) return std_logic;
 
+	type timing_select is (horizontal, vertical);
+	function timing_range (
+			vga_res:	in	vga_timing;
+			timing:		in	timing_select
+		) return natural;
+
 end package vga_data;
 
 package body vga_data is
-
-	type timing_select is (horizontal, vertical);
 
 	function timing_range (
 			vga_res:	in	vga_timing;
