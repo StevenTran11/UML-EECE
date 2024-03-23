@@ -12,7 +12,7 @@ USE ads.ads_complex_pkg.all;
 entity project2 is
     generic (
         total_stages : natural := 25;  -- Adjust the number of pipeline stages as needed
-        entities     : natural := 3;
+        entities     : natural := 4;
         vga_res: vga_timing := vga_res_default;
 		threshold : ads_sfixed := to_ads_sfixed(4)
     );
@@ -110,10 +110,8 @@ architecture Behavioral of project2 is
 			reset : in  STD_LOGIC;
 			h_sync: in  STD_LOGIC;
 			v_sync: in  STD_LOGIC;
-            point_valid_in: in  boolean;
 			h_sync_out: out STD_LOGIC;
-			v_sync_out: out STD_LOGIC;
-            point_valid_out: out  boolean
+			v_sync_out: out STD_LOGIC
 		);
 	end component FlipFlop;    
 
@@ -132,13 +130,12 @@ architecture Behavioral of project2 is
 	
 	-- Signal declarations for connections
 	signal point : coordinate;
+	signal point_valid : boolean;
 	-- signal complex_input : ads_complex;
 	signal h_sync, v_sync : std_logic_vector(0 to total_stages + entities);
 	type Complex_Record_Array is array (0 to total_stages) of Complex_Record;
 	signal stage_outputs : Complex_Record_Array;
 	signal pll_output_signal : std_logic;
-    type boolean_array is array (0 to total_stages + entities) of boolean;
-    signal point_valid_out : boolean_array;
 	
 begin
 
@@ -160,7 +157,7 @@ begin
             vga_clock => pll_output_signal,
             reset => reset,
             point => point,
-            point_valid => point_valid_out(0),
+            point_valid => point_valid,
             h_sync => h_sync(0),
             v_sync => v_sync(0)
         );
@@ -200,7 +197,7 @@ begin
 	stage_outputs(0).stage_data <= 0;
 	stage_outputs(0).stage_overflow <= false;
 
-    -- Generate pipeline stages
+            -- Generate pipeline stages
     pipeline_stages: for i in 0 to total_stages-1 generate
 		pipeline_stage_inst : pipeline_stage
 			generic map (
@@ -224,7 +221,7 @@ begin
             clk => pll_output_signal,
             reset => reset,
             stage_input => stage_outputs(total_stages),
-            point_valid => point_valid_out(total_stages + entities),
+            point_valid => point_valid,
             vga_red => vga_red,
             vga_green => vga_green,
             vga_blue => vga_blue
@@ -238,10 +235,8 @@ begin
                 reset => reset,
                 h_sync => h_sync(i-1),
                 v_sync => v_sync(i-1),
-                point_valid_in => point_valid_out(i-1),
                 h_sync_out => h_sync(i),
-                v_sync_out => v_sync(i),
-                point_valid_out => point_valid_out(i)
+                v_sync_out => v_sync(i)
             );
     end generate flipflop_instances;
 
