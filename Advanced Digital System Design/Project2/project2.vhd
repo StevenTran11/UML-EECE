@@ -12,7 +12,7 @@ USE ads.ads_complex_pkg.all;
 entity project2 is
     generic (
         total_stages : natural := 25;  -- Adjust the number of pipeline stages as needed
-        entities     : natural := 3;
+        entities     : natural := 2;
         vga_res: vga_timing := vga_res_default;
 		threshold : ads_sfixed := to_ads_sfixed(4)
     );
