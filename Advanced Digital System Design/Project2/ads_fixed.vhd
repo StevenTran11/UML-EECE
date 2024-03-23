@@ -314,7 +314,6 @@ package body ads_fixed is
 		variable extended_l, extended_r: signed(l'length-1 downto 0);
 		variable extended_result: signed(2*l'length-1 downto 0);
 		variable ret: ads_sfixed := (others => '0');
-		variable result_msb: std_logic;
 		variable l_msb, r_msb: std_logic;
 		variable overflow, underflow: boolean;
 		constant cutoff: natural :=2*lsb + msb;
