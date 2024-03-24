@@ -9,6 +9,12 @@ library vga;
 use vga.vga_data.all;
 
 entity tb_project2 is
+	generic (
+				total_stages : natural := 25;  -- Adjust the number of pipeline stages as needed
+				entities     : natural := 4;
+				vga_res: vga_timing := vga_res_default;
+				threshold : ads_sfixed := to_ads_sfixed(4)
+			);
 end entity tb_project2;
 
 architecture test of tb_project2 is
@@ -45,6 +51,12 @@ begin
 	vga_clock <= not vga_clock after 1 ps when not test_done else '0';
 
 	dut: project2
+		generic map (
+			total_stages => 25;  -- Adjust the number of pipeline stages as needed
+	        entities =>		4;
+	        vga_res: =>		vga_res_default;
+			threshold => 	to_ads_sfixed(4)
+		)
 		port map (
 			mode_in => mode_in,
 			reset => reset,
@@ -62,7 +74,7 @@ begin
 		wait until rising_edge(vga_clock);
 		reset <= '1';
 
-		for i in 0 to 40 loop
+		for i in 0 to timing_range(vga_res) loop
 			wait until rising_edge(vga_clock);
 		end loop;
 
