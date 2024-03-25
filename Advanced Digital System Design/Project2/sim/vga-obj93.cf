@@ -1,0 +1,7 @@
+v 4
+file . "../vga_fsm.vhd" "f9353bf3921444d0f162fc97441ac3a6aeed2ec1" "20240325083829.869":
+  entity vga_fsm at 1( 0) + 0 on 17;
+  architecture fsm of vga_fsm at 23( 372) + 0 on 18;
+file . "../vga_data.vhd" "31b5f40c67a3cb39f3e59a4993d3a98e5eb0f6ec" "20240325083829.848":
+  package vga_data at 1( 0) + 0 on 15 body;
+  package body vga_data at 137( 3848) + 0 on 16;

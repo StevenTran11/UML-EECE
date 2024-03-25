@@ -1,0 +1,25 @@
+v 4
+file . "tb_project2.vhd" "42449d5605f5033b5cbd8296e8d1ddcaef7ed768" "20240325083830.098":
+  entity tb_project2 at 1( 0) + 0 on 41;
+  architecture test of tb_project2 at 22( 488) + 0 on 42;
+file . "pll.vhd" "33e3254172e93fb2c86b16b62827c13765d63a5a" "20240325083830.028":
+  entity pll at 1( 0) + 0 on 37;
+  architecture passthrough of pll at 11( 141) + 0 on 38;
+file . "../color_map.vhd" "6aec83b6182d8f2b79f6af766ebc958464a973bf" "20240325083829.982":
+  entity color_map at 1( 0) + 0 on 33;
+  architecture rtl of color_map at 23( 637) + 0 on 34;
+file . "../pipeline_stage.vhd" "c3a4b0acce0528d444c5104351bbad73f43534fa" "20240325083829.936":
+  entity pipeline_stage at 1( 0) + 0 on 29;
+  architecture rtl of pipeline_stage at 21( 551) + 0 on 30;
+file . "../to_complex.vhd" "4c3d746e55631f8f22c3244c09d233b543de5d8b" "20240325083829.907":
+  entity to_complex at 1( 0) + 0 on 27;
+  architecture behavior of to_complex at 20( 396) + 0 on 28;
+file . "../FlipFlop.vhd" "06fb8b2c9d1c520901bf748c925188047c815cb4" "20240325083829.954":
+  entity flipflop at 1( 0) + 0 on 31;
+  architecture behavioral of flipflop at 17( 381) + 0 on 32;
+file . "../mode.vhd" "41ffc1e3397fda2734be23558415bd30982f8a9d" "20240325083830.010":
+  entity mode_select at 1( 0) + 0 on 35;
+  architecture behavior of mode_select at 16( 341) + 0 on 36;
+file . "../project2.vhd" "3b66a245a7b44d2ca0f89e8a8daf6c0478f79489" "20240325083830.063":
+  entity project2 at 1( 0) + 0 on 39;
+  architecture behavioral of project2 at 33( 1245) + 0 on 40;

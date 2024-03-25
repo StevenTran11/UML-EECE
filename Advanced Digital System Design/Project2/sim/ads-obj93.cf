@@ -1,0 +1,7 @@
+v 4
+file . "../ads_complex.vhd" "a822702ef33df4a76e7b0ff83beb53b66b411c46" "20240325083829.828":
+  package ads_complex_pkg at 2( 42) + 0 on 17 body;
+  package body ads_complex_pkg at 61( 1137) + 0 on 18;
+file . "../ads_fixed.vhd" "a3b6c1d62d92d41b10b8efee189cc0ebd724069f" "20240325083829.805":
+  package ads_fixed at 3( 45) + 0 on 15 body;
+  package body ads_fixed at 63( 1330) + 0 on 16;
