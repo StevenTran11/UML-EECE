@@ -8,6 +8,7 @@ module asend_fsm (
     always_ff @(posedge aclk or negedge arst_n)
         if (!arst_n) begin
             state <= READY;
+        end
         else begin
             state <= next;
         end
