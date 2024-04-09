@@ -53,14 +53,14 @@ architecture rtl of cdc_syncfifo is
     );
   end component rctl;
 
-  component sync2 is
+  component sync3 is
     port (
       q      : out std_logic;
       d      : in std_logic;
       clk    : in std_logic;
       rst_n  : in std_logic
     );
-  end component sync2;
+  end component sync3;
 
   component dp_ram2 is
     generic (
@@ -101,14 +101,14 @@ begin
   );
 
   -- Instantiate sync2 components for write and read pointers
-  w2r_sync : sync2 port map (
+  w2r_sync : sync3 port map (
     q      => rq2_wptr,
     d      => wptr,
     clk    => rclk,
     rst_n  => rrst_n
   );
 
-  r2w_sync : sync2 port map (
+  r2w_sync : sync3 port map (
     q      => wq2_rptr,
     d      => rptr,
     clk    => wclk,
