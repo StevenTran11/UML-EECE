@@ -4,7 +4,7 @@ use ieee.std_logic_1164.all;
 entity sync3 is
   port (
     clk1 : in  signal logic;
-	clk2 : in  signal logic;
+	  clk2 : in  signal logic;
     rst_n : in  signal logic;
     d : in  signal logic;
     q : out signal logic
