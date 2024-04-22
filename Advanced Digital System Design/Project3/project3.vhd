@@ -123,6 +123,7 @@ architecture rtl of project3 is
     signal tail_ptr : natural range 0 to 2**ADDR_WIDTH - 1;
     signal address_a : natural range 0 to 2**ADDR_WIDTH - 1;
     signal address_b : natural range 0 to 2**ADDR_WIDTH - 1;
+    signal q_a, q_b: std_logic_vector(7 downto 0);
 
     signal chsel:       natural range 0 to 2**5 - 1;
     signal soc:         std_logic;
