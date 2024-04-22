@@ -11,7 +11,7 @@ entity producer_fsm is
         tail_ptr     : in  natural range 0 to 2**ADDR_WIDTH - 1;
         address_b    : out natural range 0 to 2**ADDR_WIDTH - 1;
         soc          : out std_logic;  -- Start of conversion
-        dout         : in  std_logic;  -- Done
+        done         : in  std_logic;  -- Done
         save         : out  std_logic  -- Save
     );
 end entity producer_fsm;
@@ -32,7 +32,7 @@ begin
                     state <= WAITS;
                 when WAITS =>
                     soc <= '0';
-                    if dout = '1' then
+                    if done = '1' then
                         state <= CHECK;
                     end if;
                 when CHECK =>
