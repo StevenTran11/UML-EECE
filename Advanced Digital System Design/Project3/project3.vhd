@@ -10,33 +10,40 @@ end entity project3;
 
 architecture rtl of project3 is
     -- Components declaration
+	 component pll is
+        port (
+            inclk0: in std_logic_vector(1 downto 0);
+            c0    : out std_logic
+        );
+    end component pll;
+	 
     component bin_to_gray is
         generic (
-        input_width: positive := 6  -- Assuming 6-bit input
+            input_width: positive := 6  -- Assuming 6-bit input
         );
         port (
-        bin_in  : in  std_logic_vector(input_width - 1 downto 0);
-        gray_out: out std_logic_vector(input_width - 1 downto 0)
+            bin_in  : in  std_logic_vector(input_width - 1 downto 0);
+            gray_out: out std_logic_vector(input_width - 1 downto 0)
         );
     end component bin_to_gray;
 
     component gray_to_bin is
         generic (
-        input_width: positive := 6  -- Assuming 6-bit input
+            input_width: positive := 6  -- Assuming 6-bit input
         );
         port (
-        gray_in : in  std_logic_vector(input_width - 1 downto 0);
-        bin_out : out std_logic_vector(input_width - 1 downto 0)
+            gray_in : in  std_logic_vector(input_width - 1 downto 0);
+            bin_out : out std_logic_vector(input_width - 1 downto 0)
         );
     end component gray_to_bin;
 
     component sync3 is
         port (
-        clk1  : in  std_logic;
-        clk2  : in  std_logic;
-        rst_n : in  std_logic;
-        d     : in  std_logic;
-        q     : out std_logic
+            clk1  : in  std_logic;
+            clk2  : in  std_logic;
+            rst_n : in  std_logic;
+            d     : in  std_logic;
+            q     : out std_logic
         );
     end component sync3;
 
@@ -47,9 +54,15 @@ architecture rtl of project3 is
     signal head_ptr_sync : std_logic_vector(5 downto 0);
     signal tail_ptr_gray : std_logic_vector(5 downto 0);
     signal tail_ptr_sync : std_logic_vector(5 downto 0);
+    signal pll_clk      : std_logic;   -- clock of 1 MHz
 
 begin
     -- Instantiate PLL
+	 pll_inst : pll
+        port map (
+            inclk0 => clk_10MHz,
+            c0     => pll_clk
+        );
     -- Instantiate ADC
     adc_inst : max10_adc
         port map (
@@ -118,8 +131,8 @@ begin
 
     sync3_inst1 : sync3
         port map (
-            clk1  => clk_50MHz,  -- Assuming 50 MHz clock for sync3
-            clk2  => clk_10MHz,  -- Assuming 10 MHz clock for sync3
+            clk1  => clk_50MHz,
+            clk2  => pll_clk,
             rst_n => '1',        -- Assuming synchronous reset is active high
             d     => addr_b_gray,
             q     => addr_b_sync
@@ -146,8 +159,8 @@ begin
 
     sync3_inst2 : sync3
         port map (
-            clk1  => clk_50MHz,      -- Assuming 50 MHz clock for sync3
-            clk2  => clk_10MHz,      -- Assuming 10 MHz clock for sync3
+            clk1  => clk_50MHz,
+            clk2  => pll_clk,
             rst_n => '1',            -- Assuming synchronous reset is active high
             d     => tail_ptr_gray,
             q     => tail_ptr_sync
