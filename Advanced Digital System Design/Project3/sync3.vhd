@@ -2,18 +2,21 @@ library ieee;
 use ieee.std_logic_1164.all;
 
 entity sync3 is
+  generic (
+		input_width: positive := 16
+	);
   port (
-    clk1 : in  signal logic;
-	  clk2 : in  signal logic;
-    rst_n : in  signal logic;
-    d : in  signal logic;
-    q : out signal logic
+    clk1 : in	std_logic;
+    clk2 : in	std_logic;
+    rst_n : in	std_logic;
+    d : in std_logic_vector(input_width - 1 downto 0);
+    q : out std_logic_vector(input_width - 1 downto 0)
   );
 end entity sync3;
 
 architecture rtl of sync3 is
 
-  signal q1, q2 : signal logic;
+  signal q1, q2 : std_logic_vector(input_width - 1 downto 0);
 
 begin
 
