@@ -17,7 +17,7 @@ entity producer_fsm is
 end entity producer_fsm;
 
 architecture fsm_arch of producer_fsm is
-    type state_type is (START, WAIT, CHECK, INCREMENT);
+    type state_type is (START, WAITS, CHECK, INCREMENT);
     signal state : state_type := START; -- Initialize to START
     signal next_address_b : natural range 0 to 2**ADDR_WIDTH := 0; -- Initialize to 0
 begin
@@ -29,8 +29,8 @@ begin
                 when START =>
                     save <= '0';
                     soc <= '1';
-                    state <= WAIT;
-                when WAIT =>
+                    state <= WAITS;
+                when WAITS =>
                     soc <= '0';
                     if dout = '1' then
                         state <= CHECK;
@@ -47,6 +47,7 @@ begin
                         next_address_b <= next_address_b + 1;
                     else
                         next_address_b <= 0;
+					end if;
             end case;
         end if;
     end process;
