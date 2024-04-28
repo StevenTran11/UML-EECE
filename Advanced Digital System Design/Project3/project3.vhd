@@ -111,6 +111,30 @@ architecture rtl of project3 is
         );
     end component sync3;
 
+    function natural_to_std_logic_vector(value : natural; width : positive) return std_logic_vector is
+        variable result : std_logic_vector(width-1 downto 0);
+    begin
+        for i in width-1 downto 0 loop
+            if (value / (2**i)) mod 2 = 1 then
+                result(i) := '1';
+            else
+                result(i) := '0';
+            end if;
+        end loop;
+        return result;
+    end function natural_to_std_logic_vector;
+
+    function std_logic_vector_to_natural(value : std_logic_vector) return natural is
+        variable result : natural := 0;
+    begin
+        for i in value'range loop
+            if value(i) = '1' then
+                result := result + 2**(value'length - 1 - i);
+            end if;
+        end loop;
+        return result;
+    end function std_logic_vector_to_natural;    
+
     -- Internal signals
     signal addr_b_gray    : std_logic_vector(5 downto 0);
     signal addr_b_sync    : std_logic_vector(5 downto 0);
@@ -119,8 +143,8 @@ architecture rtl of project3 is
     signal tail_ptr_gray : std_logic_vector(5 downto 0);
     signal tail_ptr_sync : std_logic_vector(5 downto 0);
     signal pll_clk      : std_logic;   -- clock of 1 MHz
-    signal head_ptr : natural range 0 to 2**ADDR_WIDTH - 1;
-    signal tail_ptr : natural range 0 to 2**ADDR_WIDTH - 1;
+    signal head_ptr : std_logic_vector(5 downto 0);
+    signal tail_ptr : std_logic_vector(5 downto 0);
     signal address_a : natural range 0 to 2**ADDR_WIDTH - 1;
     signal address_b : natural range 0 to 2**ADDR_WIDTH - 1;
     signal q_a, q_b: std_logic_vector(7 downto 0);
@@ -157,7 +181,7 @@ begin
         )
         port map (
             clk       => pll_clk,
-            tail_ptr  => tail_ptr,
+            tail_ptr  => std_logic_vector_to_natural(tail_ptr),
             address_b => address_b,
             soc       => soc,
             done      => done,
@@ -170,7 +194,7 @@ begin
         )
         port map (
             clk       => clk_50MHz,
-            head_ptr  => head_ptr,
+            head_ptr  => std_logic_vector_to_natural(head_ptr),
             address_a => address_a
         );
 
@@ -185,23 +209,22 @@ begin
             clk_b => pll_clk,
             addr_a => address_a,
             addr_b => address_b,
-            data_a => dout, --Not used
-            data_b => dout,
-            we_a => '0', --No Write
+            data_a => (others => '0'), -- Not used
+            data_b => natural_to_std_logic_vector(dout, 8), -- Convert dout to std_logic_vector
+            we_a => '0', -- No Write
             we_b => save,
-            q_a => q_a, --Used to sev seg display.  Not added yet
+            q_a => q_a,
             q_b => q_b
         );
 
     -- Conversions
-
     -- Transformation loop for address_b
     bin_to_gray_inst1 : bin_to_gray
         generic map (
             input_width => 6  -- Assuming 6-bit input
         )
         port map (
-            bin_in   => address_b,
+            bin_in   => natural_to_std_logic_vector(address_b),
             gray_out => addr_b_gray
         );
 
@@ -229,7 +252,7 @@ begin
             input_width => 6  -- Assuming 6-bit input
         )
         port map (
-            bin_in   => address_a,
+            bin_in   => natural_to_std_logic_vector(address_a),
             gray_out => tail_ptr_gray
         );
 
