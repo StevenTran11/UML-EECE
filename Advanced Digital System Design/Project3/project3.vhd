@@ -102,14 +102,18 @@ architecture rtl of project3 is
     end component gray_to_bin;
 
     component sync3 is
+        generic (
+            input_width: positive := 16  -- Adjust the default value as needed
+        );
         port (
             clk1  : in  std_logic;
             clk2  : in  std_logic;
             rst_n : in  std_logic;
-            d     : in  std_logic;
-            q     : out std_logic
+            d     : in  std_logic_vector(input_width - 1 downto 0);
+            q     : out std_logic_vector(input_width - 1 downto 0)
         );
     end component sync3;
+    
 
     function natural_to_std_logic_vector(value : natural; width : positive) return std_logic_vector is
         variable result : std_logic_vector(width-1 downto 0);
@@ -152,7 +156,7 @@ architecture rtl of project3 is
     signal chsel:       natural range 0 to 2**5 - 1;
     signal soc:         std_logic;
     signal dout:        natural range 0 to 2**12 - 1;
-    signal done:        std_logic;
+    signal done: std_logic;
     signal clk_dft:     std_logic;
     signal save:     std_logic;
 
@@ -224,11 +228,14 @@ begin
             input_width => 6  -- Assuming 6-bit input
         )
         port map (
-            bin_in   => natural_to_std_logic_vector(address_b),
+            bin_in   => natural_to_std_logic_vector(address_b, 6),
             gray_out => addr_b_gray
         );
 
     sync3_inst1 : sync3
+        generic map (
+            input_width => 6  -- Assuming 6-bit input width, adjust as needed
+        )
         port map (
             clk1  => clk_50MHz,
             clk2  => pll_clk,
@@ -252,11 +259,14 @@ begin
             input_width => 6  -- Assuming 6-bit input
         )
         port map (
-            bin_in   => natural_to_std_logic_vector(address_a),
+            bin_in   => natural_to_std_logic_vector(address_a, 6),
             gray_out => tail_ptr_gray
         );
 
     sync3_inst2 : sync3
+        generic map (
+            input_width => 6  -- Assuming 6-bit input
+        )
         port map (
             clk1  => clk_50MHz,
             clk2  => pll_clk,
