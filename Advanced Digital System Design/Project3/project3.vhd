@@ -1,5 +1,8 @@
 library ieee;
 use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+library work;
+use work.seven_segment_pkg.all;
 
 entity project3 is
     generic (
@@ -7,7 +10,24 @@ entity project3 is
         );
     port (
         clk_10MHz : in std_logic;   -- Input clock of 10 MHz
-        clk_50MHz : in std_logic    -- Input clock of 50 MHz
+        clk_50MHz : in std_logic;    -- Input clock of 50 MHz
+        -- Seven-Segment Display Ports
+        HEX00 : out std_logic;  -- PIN_C14
+        HEX01 : out std_logic;  -- PIN_E15
+        HEX02 : out std_logic;  -- PIN_C15
+        HEX03 : out std_logic;  -- PIN_C16
+        HEX04 : out std_logic;  -- PIN_E16
+        HEX05 : out std_logic;  -- PIN_D17
+        HEX06 : out std_logic;  -- PIN_C17
+        HEX07 : out std_logic;  -- PIN_D15
+        HEX10 : out std_logic;  -- PIN_C18
+        HEX11 : out std_logic;  -- PIN_D18
+        HEX12 : out std_logic;  -- PIN_E18
+        HEX13 : out std_logic;  -- PIN_B16
+        HEX14 : out std_logic;  -- PIN_A17
+        HEX15 : out std_logic;  -- PIN_A18
+        HEX16 : out std_logic;  -- PIN_B17
+        HEX17 : out std_logic   -- PIN_A16
     );
 end entity project3;
 
@@ -152,8 +172,9 @@ architecture rtl of project3 is
     signal address_a : natural range 0 to 2**ADDR_WIDTH - 1;
     signal address_b : natural range 0 to 2**ADDR_WIDTH - 1;
     signal q_a, q_b: std_logic_vector(7 downto 0);
+    signal hex_display : seven_segment_array(0 to 1);
 
-    signal chsel:       natural range 0 to 2**5 - 1;
+    signal chsel : natural range 0 to 2**5 - 1 := 0; -- Assigning a default value of 0
     signal soc:         std_logic;
     signal dout:        natural range 0 to 2**12 - 1;
     signal done: std_logic;
@@ -161,6 +182,30 @@ architecture rtl of project3 is
     signal save:     std_logic;
 
 begin
+    -- Get seven-segment configurations for the hexadecimal number
+    hex_display <= get_hex_number(q_a, common_anode);
+
+    -- Display hexadecimal digits on seven-segment display ports
+    HEX00 <= hex_display(0).a;
+    HEX01 <= hex_display(0).b;
+    HEX02 <= hex_display(0).c;
+    HEX03 <= hex_display(0).d;
+    HEX04 <= hex_display(0).e;
+    HEX05 <= hex_display(0).f;
+    HEX06 <= hex_display(0).g;
+
+    HEX10 <= hex_display(1).a;
+    HEX11 <= hex_display(1).b;
+    HEX12 <= hex_display(1).c;
+    HEX13 <= hex_display(1).d;
+    HEX14 <= hex_display(1).e;
+    HEX15 <= hex_display(1).f;
+    HEX16 <= hex_display(1).g;
+
+    -- Turn off unused segments
+    HEX07 <= '0';
+    HEX17 <= '0';
+
     -- Instantiate PLL
 	 pll_inst : pll
         port map (
