@@ -8,7 +8,7 @@ entity consumer_fsm is
     );
     port (
         clk             : in  std_logic;
-		  rst          	: in  std_logic;  -- Reset
+        rst          	: in  std_logic;  -- Reset
         head_ptr        : in  natural range 0 to 2**ADDR_WIDTH - 1;
         address_a       : out natural range 0 to 2**ADDR_WIDTH - 1
     );
@@ -36,9 +36,9 @@ begin
 
     process(clk, rst)
     begin
-		  if rst = '0' then
-				state <= WAIT_FOR_SPACE;
-				next_address_a <= 0;
+        if rst = '0' then
+			state <= WAIT_FOR_SPACE;
+			next_address_a <= 2**ADDR_WIDTH - 1;
         elsif rising_edge(clk) then
             case state is
                 when WAIT_FOR_SPACE =>

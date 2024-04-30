@@ -12,7 +12,7 @@ entity producer_fsm is
         address_b    : out natural range 0 to 2**ADDR_WIDTH - 1;
         soc          : out std_logic;  -- Start of conversion
         done         : in  std_logic;  -- Done
-		  rst          : in  std_logic;  -- Reset
+        rst          : in  std_logic;  -- Reset
         save         : out  std_logic  -- Save
     );
 end entity producer_fsm;
@@ -39,9 +39,9 @@ begin
 
     process(clk, rst)
     begin
-		  if rst = '0' then
-				state <= START;
-				next_address_b <= 0;
+        if rst = '0' then
+            state <= START;
+            next_address_b <= 0;
         elsif rising_edge(clk) then
             case state is
                 when START =>
