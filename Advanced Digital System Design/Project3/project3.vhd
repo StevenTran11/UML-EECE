@@ -167,8 +167,8 @@ architecture rtl of project3 is
     signal addr_b_sync    : std_logic_vector(5 downto 0);
     signal head_ptr_gray : std_logic_vector(5 downto 0);
     signal head_ptr_sync : std_logic_vector(5 downto 0);
-    signal tail_ptr_gray : std_logic_vector(5 downto 0);
-    signal tail_ptr_sync : std_logic_vector(5 downto 0);
+    signal addr_a_gray : std_logic_vector(5 downto 0);
+    signal addr_a_sync : std_logic_vector(5 downto 0);
     signal pll_clk      : std_logic;   -- clock of 1 MHz
     signal head_ptr : std_logic_vector(5 downto 0);
     signal tail_ptr : std_logic_vector(5 downto 0);
@@ -235,7 +235,7 @@ begin
             address_b => address_b,
             soc       => soc,
             done      => done,
-				rst		 => rst,
+			rst		  => rst,
             save      => save
         );
     -- Instantiate Consumer FSM
@@ -245,7 +245,7 @@ begin
         )
         port map (
             clk       => clk_50MHz,
-				rst		 => rst,
+			rst		  => rst,
             head_ptr  => std_logic_vector_to_natural(head_ptr),
             address_a => address_a
         );
@@ -270,14 +270,14 @@ begin
         );
 
     -- Conversions
-    -- Transformation loop for address_b
+    -- Transformation loop for address_a 
     bin_to_gray_inst1 : bin_to_gray
         generic map (
             input_width => 6  -- Assuming 6-bit input
         )
         port map (
-            bin_in   => natural_to_std_logic_vector(address_b, 6),
-            gray_out => addr_b_gray
+            bin_in   => natural_to_std_logic_vector(address_a, 6),
+            gray_out => addr_a_gray
         );
 
     sync3_inst1 : sync3
@@ -288,8 +288,8 @@ begin
             clk1  => clk_50MHz,
             clk2  => pll_clk,
             rst_n => rst,        -- Assuming synchronous reset is active high
-            d     => addr_b_gray,
-            q     => addr_b_sync
+            d     => addr_a_gray,
+            q     => addr_a_sync
         );
 
     gray_to_bin_inst1 : gray_to_bin
@@ -297,18 +297,18 @@ begin
             input_width => 6  -- Assuming 6-bit input
         )
         port map (
-            gray_in => addr_b_sync,
-            bin_out => head_ptr
+            gray_in => addr_a_sync,
+            bin_out => tail_ptr
         );
 
-    -- Transformation loop for addr_a
+    -- Transformation loop for address_b
     bin_to_gray_inst2 : bin_to_gray
         generic map (
             input_width => 6  -- Assuming 6-bit input
         )
         port map (
-            bin_in   => natural_to_std_logic_vector(address_a, 6),
-            gray_out => tail_ptr_gray
+            bin_in   => natural_to_std_logic_vector(address_b, 6),
+            gray_out => addr_b_gray
         );
 
     sync3_inst2 : sync3
@@ -316,11 +316,11 @@ begin
             input_width => 6  -- Assuming 6-bit input
         )
         port map (
-            clk1  => clk_50MHz,
-            clk2  => pll_clk,
+            clk1  => pll_clk,
+            clk2  => clk_50MHz,
             rst_n => rst,            -- Assuming synchronous reset is active high
-            d     => tail_ptr_gray,
-            q     => tail_ptr_sync
+            d     => addr_b_gray,
+            q     => addr_b_sync
         );
 
     gray_to_bin_inst2 : gray_to_bin
@@ -328,7 +328,7 @@ begin
             input_width => 6  -- Assuming 6-bit input
         )
         port map (
-            gray_in => tail_ptr_sync,
+            gray_in => addr_b_sync,
             bin_out => tail_ptr
         );
 end architecture rtl;
