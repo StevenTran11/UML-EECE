@@ -11,7 +11,7 @@ entity project3 is
     port (
         clk_10MHz : in std_logic;   -- Input clock of 10 MHz
         clk_50MHz : in std_logic;   -- Input clock of 50 MHz
-		  rst       : in  std_logic;  -- Reset
+		rst       : in  std_logic;  -- Reset
         -- Seven-Segment Display Ports
         HEX00 : out std_logic;  -- PIN_C14
         HEX01 : out std_logic;  -- PIN_E15
@@ -34,7 +34,7 @@ end entity project3;
 
 architecture rtl of project3 is
     -- Components declaration
-	 component pll is
+	component pll is
         port (
             inclk0: in std_logic;
             c0    : out std_logic
@@ -84,7 +84,7 @@ architecture rtl of project3 is
 
         generic 
         (
-            DATA_WIDTH : natural := 8;
+            DATA_WIDTH : natural := 12;
             ADDR_WIDTH : natural := 6
         );
     
@@ -104,39 +104,18 @@ architecture rtl of project3 is
     
     end component true_dual_port_ram_dual_clock;
 	 
-    component bin_to_gray is
+    component synchronizer is
         generic (
-            input_width: positive := 6  -- Assuming 6-bit input
+            input_width: positive := 16
         );
         port (
-            bin_in  : in  std_logic_vector(input_width - 1 downto 0);
-            gray_out: out std_logic_vector(input_width - 1 downto 0)
-        );
-    end component bin_to_gray;
-
-    component gray_to_bin is
-        generic (
-            input_width: positive := 6  -- Assuming 6-bit input
-        );
-        port (
-            gray_in : in  std_logic_vector(input_width - 1 downto 0);
+            clk1 : in	std_logic;
+            clk2 : in	std_logic;
+            rst_n : in	std_logic;
+            bin_in : in std_logic_vector(input_width - 1 downto 0);
             bin_out : out std_logic_vector(input_width - 1 downto 0)
         );
-    end component gray_to_bin;
-
-    component sync3 is
-        generic (
-            input_width: positive := 16  -- Adjust the default value as needed
-        );
-        port (
-            clk1  : in  std_logic;
-            clk2  : in  std_logic;
-            rst_n : in  std_logic;
-            d     : in  std_logic_vector(input_width - 1 downto 0);
-            q     : out std_logic_vector(input_width - 1 downto 0)
-        );
-    end component sync3;
-    
+    end component synchronizer;
 
     function natural_to_std_logic_vector(value : natural; width : positive) return std_logic_vector is
         variable result : std_logic_vector(width-1 downto 0);
@@ -163,29 +142,32 @@ architecture rtl of project3 is
     end function std_logic_vector_to_natural;    
 
     -- Internal signals
-    signal addr_b_gray    : std_logic_vector(5 downto 0);
-    signal addr_b_sync    : std_logic_vector(5 downto 0);
-    signal head_ptr_gray : std_logic_vector(5 downto 0);
-    signal head_ptr_sync : std_logic_vector(5 downto 0);
-    signal addr_a_gray : std_logic_vector(5 downto 0);
-    signal addr_a_sync : std_logic_vector(5 downto 0);
     signal pll_clk      : std_logic;   -- clock of 1 MHz
-    signal head_ptr : std_logic_vector(5 downto 0);
-    signal tail_ptr : std_logic_vector(5 downto 0);
-    signal address_a : natural range 0 to 2**ADDR_WIDTH - 1;
-    signal address_b : natural range 0 to 2**ADDR_WIDTH - 1;
     signal q_a: std_logic_vector(7 downto 0);
     signal hex_display : seven_segment_array(0 to 1);
 
-    signal soc:         std_logic;
-    signal dout:        natural range 0 to 2**12 - 1;
-    signal done: std_logic;
-    signal save:     std_logic;
+    signal soc:     std_logic;
+    signal dout:    natural range 0 to 2**12 - 1;
+    signal done:    std_logic;
+    signal save:    std_logic;
+
+    signal tail_ptr_50, tail_ptr_1:         natural range 0 to 2**ADDR_WIDTH - 1;
+    signal tail_ptr_vec_50, tail_ptr_vec_1: std_logic_vector(ADDR_WIDTH - 1 downto 0);
+    signal head_ptr_50, head_ptr_1:         natural range 0 to 2**ADDR_WIDTH - 1;
+    signal head_ptr_vec_50, head_ptr_vec_1: std_logic_vector(ADDR_WIDTH - 1 downto 0);
+    signal dout_vec : std_logic_vector(11 downto 0);
 
 begin
     -- Get seven-segment configurations for the hexadecimal number
     hex_display <= get_hex_number(q_a, common_anode);
 
+    -- Convert pointers from natural to std logic vector
+    tail_ptr_vec_50 <= std_logic_vector(to_unsigned(tail_ptr_50, ADDR_WIDTH));
+    head_ptr_vec_1 <= std_logic_vector(to_unsigned(head_ptr_1, ADDR_WIDTH));
+    dout_vec <= std_logic_vector(to_unsigned(dout, 12))
+    -- Convert pointers from std logic vector to natural
+    tail_ptr_1 <= to_integer(unsigned(tail_ptr_vec_1));
+    head_ptr_50 <= to_integer(unsigned(head_ptr_vec_50));
     -- Display hexadecimal digits on seven-segment display ports
     HEX00 <= hex_display(0).a;
     HEX01 <= hex_display(0).b;
@@ -208,7 +190,7 @@ begin
     HEX17 <= '0';
 
     -- Instantiate PLL
-	 pll_inst : pll
+	pll_inst : pll
         port map (
             inclk0 => clk_10MHz,
             c0     => pll_clk
@@ -227,12 +209,12 @@ begin
     -- Instantiate Producer FSM
     producer_inst : producer_fsm
         generic map (
-            ADDR_WIDTH => 6
+            ADDR_WIDTH => ADDR_WIDTH
         )
         port map (
             clk       => pll_clk,
-            tail_ptr  => std_logic_vector_to_natural(tail_ptr),
-            address_b => address_b,
+            tail_ptr  => tail_ptr_1,
+            address_b => head_ptr_1,
             soc       => soc,
             done      => done,
 			rst		  => rst,
@@ -241,28 +223,28 @@ begin
     -- Instantiate Consumer FSM
     consumer_inst : consumer_fsm
         generic map (
-            ADDR_WIDTH => 6
+            ADDR_WIDTH => ADDR_WIDTH
         )
         port map (
             clk       => clk_50MHz,
 			rst		  => rst,
-            head_ptr  => std_logic_vector_to_natural(head_ptr),
-            address_a => address_a
+            head_ptr  => head_ptr_50,
+            address_a => tail_ptr_50
         );
 
     -- Instantiate Dual-Port RAM
     ram_inst : true_dual_port_ram_dual_clock
         generic map (
-            DATA_WIDTH => 8,
-            ADDR_WIDTH => 6
+            DATA_WIDTH => 12,
+            ADDR_WIDTH => ADDR_WIDTH
         )
         port map (
             clk_a => clk_50MHz,
             clk_b => pll_clk,
-            addr_a => address_a,
-            addr_b => address_b,
+            addr_a => tail_ptr_50,
+            addr_b => head_ptr_1,
             data_a => (others => '0'), -- Not used
-            data_b => natural_to_std_logic_vector(dout, 8), -- Convert dout to std_logic_vector
+            data_b => dout_vec, -- Convert dout to std_logic_vector
             we_a => '0', -- No Write
             we_b => save,
             q_a => q_a,
@@ -270,65 +252,28 @@ begin
         );
 
     -- Conversions
-    -- Transformation loop for address_a 
-    bin_to_gray_inst1 : bin_to_gray
-        generic map (
-            input_width => 6  -- Assuming 6-bit input
-        )
-        port map (
-            bin_in   => natural_to_std_logic_vector(address_a, 6),
-            gray_out => addr_a_gray
+    -- Address a -> tail pointer 1
+    synchronizer_inst1 : synchronizer
+        generic map(
+            input_width => ADDR_WIDTH
         );
-
-    sync3_inst1 : sync3
-        generic map (
-            input_width => 6  -- Assuming 6-bit input width, adjust as needed
-        )
-        port map (
-            clk1  => clk_50MHz,
+        port map(
+            clk1 => clk_50MHz,
             clk2  => pll_clk,
-            rst_n => rst,        -- Assuming synchronous reset is active high
-            d     => addr_a_gray,
-            q     => addr_a_sync
+            rst_n => rst,
+            bin_in => tail_ptr_vec_50,
+            bin_out => tail_ptr_vec_1
         );
-
-    gray_to_bin_inst1 : gray_to_bin
-        generic map (
-            input_width => 6  -- Assuming 6-bit input
-        )
-        port map (
-            gray_in => addr_a_sync,
-            bin_out => tail_ptr
+    -- Address b to head pointer 50
+    synchronizer_inst2 : synchronizer
+        generic map(
+            input_width => ADDR_WIDTH
         );
-
-    -- Transformation loop for address_b
-    bin_to_gray_inst2 : bin_to_gray
-        generic map (
-            input_width => 6  -- Assuming 6-bit input
-        )
-        port map (
-            bin_in   => natural_to_std_logic_vector(address_b, 6),
-            gray_out => addr_b_gray
-        );
-
-    sync3_inst2 : sync3
-        generic map (
-            input_width => 6  -- Assuming 6-bit input
-        )
-        port map (
-            clk1  => pll_clk,
+        port map(
+            clk1 => pll_clk,
             clk2  => clk_50MHz,
-            rst_n => rst,            -- Assuming synchronous reset is active high
-            d     => addr_b_gray,
-            q     => addr_b_sync
-        );
-
-    gray_to_bin_inst2 : gray_to_bin
-        generic map (
-            input_width => 6  -- Assuming 6-bit input
-        )
-        port map (
-            gray_in => addr_b_sync,
-            bin_out => tail_ptr
+            rst_n => rst,
+            bin_in => head_ptr_vec_1,
+            bin_out => head_ptr_vec_50
         );
 end architecture rtl;
