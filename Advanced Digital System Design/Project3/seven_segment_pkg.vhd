@@ -110,7 +110,7 @@ package body seven_segment_pkg is
     end function lamps_off;
 
     function get_hex_number(
-        num: std_logic_vector(0 to 7);
+        num: std_logic_vector(7 downto 0);
         lamp_mode: in lamp_configuration := default_lamp_config
     ) return seven_segment_array
     is
@@ -118,8 +118,8 @@ package body seven_segment_pkg is
         variable hex_digit_1, hex_digit_2: hex_digit;
     begin
         -- Convert binary to hexadecimal
-        hex_digit_1 := to_integer(unsigned(num(4 to 7)));
-        hex_digit_2 := to_integer(unsigned(num(0 to 3)));
+        hex_digit_1 := to_integer(unsigned(num(3 downto 0)));
+        hex_digit_2 := to_integer(unsigned(num(7 downto 0)));
         
         -- Get seven segment configurations for each hexadecimal digit
         ret(0) := get_hex_digit(hex_digit_1, lamp_mode);
