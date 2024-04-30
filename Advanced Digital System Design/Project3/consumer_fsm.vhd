@@ -16,15 +16,15 @@ end entity consumer_fsm;
 
 architecture fsm_arch of consumer_fsm is
     type state_type is (WAIT_FOR_SPACE, INCREMENT_ADDRESS);
-    signal state : state_type := WAIT_FOR_SPACE; -- Initialize to WAIT_FOR_SPACE
-    signal next_address_a : natural range 0 to 2**ADDR_WIDTH := 2**ADDR_WIDTH - 1; -- Initialize to max value
+    signal state : state_type; -- Initialize to WAIT_FOR_SPACE
+    signal next_address_a : natural range 0 to 2**ADDR_WIDTH; -- Initialize to max value
 	 
 	 function can_advance (
 			head, tail: in natural range 0 to 2**ADDR_WIDTH - 1
 		) return boolean
 		is
 	begin
-		if tail > head and head /= 0 and tail /= 2**ADDR_WIDTH - 1 then
+		if tail > head and not (head = 0 and tail = 2**ADDR_WIDTH - 1) then
 			return true;
 		elsif tail < head and (head - tail) > 1 then
 			return true;

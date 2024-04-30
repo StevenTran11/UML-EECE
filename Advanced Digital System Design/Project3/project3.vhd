@@ -133,10 +133,11 @@ architecture rtl of project3 is
     signal head_ptr_50, head_ptr_1:         natural range 0 to 2**ADDR_WIDTH - 1;
     signal head_ptr_vec_50, head_ptr_vec_1: std_logic_vector(ADDR_WIDTH - 1 downto 0);
     signal dout_vec : std_logic_vector(11 downto 0);
+    signal temperature : std_logic_vector(5 downto 0); -- Output temperature as std_logic_vector
 
 begin
     -- Get seven-segment configurations for the hexadecimal number
-    hex_display <= get_hex_number(q_a, common_anode);
+    hex_display <= get_hex_number(temperature, common_anode);
 
     -- Convert pointers from natural to std logic vector
     tail_ptr_vec_50 <= std_logic_vector(to_unsigned(tail_ptr_50, ADDR_WIDTH));
@@ -145,6 +146,97 @@ begin
     -- Convert pointers from std logic vector to natural
     tail_ptr_1 <= to_integer(unsigned(tail_ptr_vec_1));
     head_ptr_50 <= to_integer(unsigned(head_ptr_vec_50));
+
+    process (q_a)
+    begin
+        case q_a is
+            when "111011100000" | "111011100001"=>
+                temperature <= "000000"; -- Temperature: 0
+            when "111011100001" =>
+                temperature <= "000001"; -- Temperature: 1
+            when "111011100010" =>
+                temperature <= "000010"; -- Temperature: 2
+            when "111011100011" =>
+                temperature <= "000011"; -- Temperature: 3
+            when "111011100100" =>
+                temperature <= "000100"; -- Temperature: 4
+            when "111011100101" =>
+                temperature <= "000101"; -- Temperature: 5
+            when "111011100110" =>
+                temperature <= "000110"; -- Temperature: 6
+            when "111011100111" =>
+                temperature <= "000111"; -- Temperature: 7
+            when "111011101000" =>
+                temperature <= "001000"; -- Temperature: 8
+            when "111011101001" =>
+                temperature <= "001001"; -- Temperature: 9
+            when "111011101010" =>
+                temperature <= "001010"; -- Temperature: 10
+            when "111011101011" =>
+                temperature <= "001011"; -- Temperature: 11
+            when "111011101100" =>
+                temperature <= "001100"; -- Temperature: 12
+            when "111011101101" =>
+                temperature <= "001101"; -- Temperature: 13
+            when "111011101110" =>
+                temperature <= "001110"; -- Temperature: 14
+            when "111011101111" =>
+                temperature <= "001111"; -- Temperature: 15
+            when "111011110000" =>
+                temperature <= "010000"; -- Temperature: 16
+            when "111011110001" =>
+                temperature <= "010001"; -- Temperature: 17
+            when "111011110010" =>
+                temperature <= "010010"; -- Temperature: 18
+            when "111011110011" =>
+                temperature <= "010011"; -- Temperature: 19
+            when "111011110100" =>
+                temperature <= "010100"; -- Temperature: 20
+            when "111011110101" =>
+                temperature <= "010101"; -- Temperature: 21
+            when "111011110110" =>
+                temperature <= "010110"; -- Temperature: 22
+            when "111011110111" =>
+                temperature <= "010111"; -- Temperature: 23
+            when "111011111000" =>
+                temperature <= "011000"; -- Temperature: 24
+            when "111011111001" =>
+                temperature <= "011001"; -- Temperature: 25
+            when "111011111010" =>
+                temperature <= "011010"; -- Temperature: 26
+            when "111011111011" =>
+                temperature <= "011011"; -- Temperature: 27
+            when "111011111100" =>
+                temperature <= "011100"; -- Temperature: 28
+            when "111011111101" =>
+                temperature <= "011101"; -- Temperature: 29
+            when "111011111110" =>
+                temperature <= "011110"; -- Temperature: 30
+            when "111011111111" =>
+                temperature <= "011111"; -- Temperature: 31
+            when "111100000000" =>
+                temperature <= "100000"; -- Temperature: 32
+            when "111100000001" =>
+                temperature <= "100001"; -- Temperature: 33
+            when "111100000010" =>
+                temperature <= "100010"; -- Temperature: 34
+            when "111100000011" =>
+                temperature <= "100011"; -- Temperature: 35
+            when "111100000100" =>
+                temperature <= "100100"; -- Temperature: 36
+            when "111100000101" =>
+                temperature <= "100101"; -- Temperature: 37
+            when "111100000110" =>
+                temperature <= "100110"; -- Temperature: 38
+            when "111100000111" =>
+                temperature <= "100111"; -- Temperature: 39
+            when "111100001000" =>
+                temperature <= "101000"; -- Temperature: 40
+            when others =>
+                temperature <= "000000"; -- Default temperature if code is out of range
+        end case;
+	end process;
+
     -- Display hexadecimal digits on seven-segment display ports
     HEX00 <= hex_display(0).a;
     HEX01 <= hex_display(0).b;

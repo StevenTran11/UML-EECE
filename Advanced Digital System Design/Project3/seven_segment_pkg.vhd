@@ -36,6 +36,10 @@ package seven_segment_pkg is
         num: std_logic_vector;
         lamp_mode: in lamp_configuration := default_lamp_config
     ) return seven_segment_array;
+
+    function to_bcd(
+        data_value: std_logic_vector
+    ) return std_logic_vector;
 end package seven_segment_pkg;
 
 package body seven_segment_pkg is
@@ -110,17 +114,18 @@ package body seven_segment_pkg is
     end function lamps_off;
 
     function get_hex_number(
-        num: std_logic_vector(11 downto 0);
+        num: std_logic_vector(15 downto 0);
         lamp_mode: in lamp_configuration := default_lamp_config
     ) return seven_segment_array
     is
         variable ret: seven_segment_array(0 to 1);
-        variable hex_digit_1, hex_digit_2, hex_digit_3: hex_digit;
+        variable hex_digit_1, hex_digit_2, hex_digit_3, hex_digit_4: hex_digit;
     begin
         -- Convert binary to hexadecimal
         hex_digit_1 := to_integer(unsigned(num(3 downto 0)));
         hex_digit_2 := to_integer(unsigned(num(7 downto 4)));
 		hex_digit_3 := to_integer(unsigned(num(11 downto 8)));
+        hex_digit_3 := to_integer(unsigned(num(11 downto 8)));
         
         -- Get seven segment configurations for each hexadecimal digit
         ret(0) := get_hex_digit(hex_digit_1, lamp_mode);
@@ -128,4 +133,26 @@ package body seven_segment_pkg is
         
         return ret;
     end function get_hex_number;
+
+    function to_bcd (
+        data_value: in std_logic_vector(11 downto 0)
+    ) return std_logic_vector
+    is
+        variable ret: std_logic_vector(15 downto 0);
+        variable temp: std_logic_vector(data_value'range);
+    begin
+        temp := data_value;
+        ret := (others => '0');
+        for i in data_value'range loop
+            for j in 0 to ret'length/4 - 1 loop
+                if unsigned(ret(4*j + 3 downto 4*j)) >= 5 then
+                    ret(4*j + 3 downto 4*j) :=std_logic_vector(unsigned(ret(4*j + 3 downto 4 * j)) + 3);
+                end if;
+            end loop;
+            ret := ret(ret'high -1 downto 0) & temp(temp'high);
+            temp := temp(temp'high - 1 downto 0) & '0';
+        end loop;
+        return ret;
+    end function to_bcd;
+
 end package body seven_segment_pkg;

@@ -27,7 +27,7 @@ architecture fsm_arch of producer_fsm is
 		) return boolean
 		is
 	begin
-		if head > tail and head /= 2**ADDR_WIDTH - 1 and tail /= 0 then
+		if head > tail and not (head = 2**ADDR_WIDTH - 1 and tail = 0) then
 			return true;
 		elsif head < tail and (tail - head) > 1 then
 			return true;
