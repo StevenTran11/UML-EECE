@@ -11,7 +11,7 @@ entity project3 is
     port (
         clk_10MHz : in std_logic;   -- Input clock of 10 MHz
         clk_50MHz : in std_logic;   -- Input clock of 50 MHz
-		rst       : in  std_logic;  -- Reset
+		  rst       : in  std_logic;  -- Reset
         -- Seven-Segment Display Ports
         HEX00 : out std_logic;  -- PIN_C14
         HEX01 : out std_logic;  -- PIN_E15
@@ -143,7 +143,7 @@ architecture rtl of project3 is
 
     -- Internal signals
     signal pll_clk      : std_logic;   -- clock of 1 MHz
-    signal q_a: std_logic_vector(7 downto 0);
+    signal q_a: std_logic_vector(11 downto 0);
     signal hex_display : seven_segment_array(0 to 1);
 
     signal soc:     std_logic;
@@ -164,7 +164,7 @@ begin
     -- Convert pointers from natural to std logic vector
     tail_ptr_vec_50 <= std_logic_vector(to_unsigned(tail_ptr_50, ADDR_WIDTH));
     head_ptr_vec_1 <= std_logic_vector(to_unsigned(head_ptr_1, ADDR_WIDTH));
-    dout_vec <= std_logic_vector(to_unsigned(dout, 12))
+    dout_vec <= std_logic_vector(to_unsigned(dout, 12));
     -- Convert pointers from std logic vector to natural
     tail_ptr_1 <= to_integer(unsigned(tail_ptr_vec_1));
     head_ptr_50 <= to_integer(unsigned(head_ptr_vec_50));
@@ -256,7 +256,7 @@ begin
     synchronizer_inst1 : synchronizer
         generic map(
             input_width => ADDR_WIDTH
-        );
+        )
         port map(
             clk1 => clk_50MHz,
             clk2  => pll_clk,
@@ -268,7 +268,7 @@ begin
     synchronizer_inst2 : synchronizer
         generic map(
             input_width => ADDR_WIDTH
-        );
+        )
         port map(
             clk1 => pll_clk,
             clk2  => clk_50MHz,

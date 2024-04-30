@@ -56,7 +56,7 @@ begin
             input_width => input_width
         )
         port map (
-            bin_in   => bin_in
+            bin_in   => bin_in,
             gray_out => bin_sync
         );
 
