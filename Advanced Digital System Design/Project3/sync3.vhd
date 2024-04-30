@@ -17,26 +17,26 @@ end entity sync3;
 architecture rtl of sync3 is
 	signal q1, q2 : std_logic_vector(input_width - 1 downto 0);
 begin
-	process(clk1, rst_n)
+	process(clk2, rst_n)
 	begin
-		if rising_edge(clk1) then
+		if rising_edge(clk2) then
 			if rst_n = '0' then
 				q <= (others => '0');  -- Representing vector of zeros using '0' attribute
-				q1 <= (others => '0'); -- Representing vector of zeros using '0' attribute
+				q2 <= (others => '0'); -- Representing vector of zeros using '0' attribute
 			else
-				q <= q1;
-        		q1 <= q2;
+				q <= q2;
+        		q2 <= q1;
       		end if;
     	end if;
 	end process;
 
-process(clk2, rst_n)
+process(clk1, rst_n)
 	begin
-    if rising_edge(clk2) then
+    if rising_edge(clk1) then
     	if rst_n = '0' then
-        	q2 <= (others => '0');  -- Representing vector of zeros using '0' attribute
+        	q1 <= (others => '0');  -- Representing vector of zeros using '0' attribute
       	else
-        	q2 <= d;
+        	q1 <= d;
 		end if;
 	end if;
 	end process;

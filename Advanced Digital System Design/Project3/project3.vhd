@@ -11,7 +11,7 @@ entity project3 is
     port (
         clk_10MHz : in std_logic;   -- Input clock of 10 MHz
         clk_50MHz : in std_logic;   -- Input clock of 50 MHz
-		  rst       : in  std_logic;  -- Reset
+		rst       : in  std_logic;  -- Reset
         -- Seven-Segment Display Ports
         HEX00 : out std_logic;  -- PIN_C14
         HEX01 : out std_logic;  -- PIN_E15
@@ -63,7 +63,7 @@ architecture rtl of project3 is
             address_b    : out natural range 0 to 2**ADDR_WIDTH - 1;
             soc          : out std_logic;  -- Start of conversion
             done         : in  std_logic;  -- Done
-				rst          : in  std_logic;  -- Reset
+			rst          : in  std_logic;  -- Reset
             save         : out  std_logic  -- Save
         );
     end component producer_fsm;
@@ -117,39 +117,16 @@ architecture rtl of project3 is
         );
     end component synchronizer;
 
-    function natural_to_std_logic_vector(value : natural; width : positive) return std_logic_vector is
-        variable result : std_logic_vector(width-1 downto 0);
-    begin
-        for i in width-1 downto 0 loop
-            if (value / (2**i)) mod 2 = 1 then
-                result(i) := '1';
-            else
-                result(i) := '0';
-            end if;
-        end loop;
-        return result;
-    end function natural_to_std_logic_vector;
-
-    function std_logic_vector_to_natural(value : std_logic_vector) return natural is
-        variable result : natural := 0;
-    begin
-        for i in value'range loop
-            if value(i) = '1' then
-                result := result + 2**(value'length - 1 - i);
-            end if;
-        end loop;
-        return result;
-    end function std_logic_vector_to_natural;    
-
     -- Internal signals
     signal pll_clk      : std_logic;   -- clock of 1 MHz
-    signal q_a: std_logic_vector(11 downto 0);
-    signal hex_display : seven_segment_array(0 to 1);
+    signal q_a : std_logic_vector(11 downto 0);
+    signal hex_display : seven_segment_array(0 to 2);
 
     signal soc:     std_logic;
     signal dout:    natural range 0 to 2**12 - 1;
     signal done:    std_logic;
     signal save:    std_logic;
+    signal clk_dft: std_logic;
 
     signal tail_ptr_50, tail_ptr_1:         natural range 0 to 2**ADDR_WIDTH - 1;
     signal tail_ptr_vec_50, tail_ptr_vec_1: std_logic_vector(ADDR_WIDTH - 1 downto 0);
@@ -204,7 +181,7 @@ begin
             tsen => '1',  -- 0 = Normal, 1 = Temperature Sensing
             dout => dout,
             eoc => done,
-            clk_dft => open
+            clk_dft => clk_dft
         );
     -- Instantiate Producer FSM
     producer_inst : producer_fsm
@@ -212,7 +189,7 @@ begin
             ADDR_WIDTH => ADDR_WIDTH
         )
         port map (
-            clk       => pll_clk,
+            clk       => clk_dft,
             tail_ptr  => tail_ptr_1,
             address_b => head_ptr_1,
             soc       => soc,
@@ -240,7 +217,7 @@ begin
         )
         port map (
             clk_a => clk_50MHz,
-            clk_b => pll_clk,
+            clk_b => clk_dft,
             addr_a => tail_ptr_50,
             addr_b => head_ptr_1,
             data_a => (others => '0'), -- Not used
@@ -259,7 +236,7 @@ begin
         )
         port map(
             clk1 => clk_50MHz,
-            clk2  => pll_clk,
+            clk2  => clk_dft,
             rst_n => rst,
             bin_in => tail_ptr_vec_50,
             bin_out => tail_ptr_vec_1
@@ -270,7 +247,7 @@ begin
             input_width => ADDR_WIDTH
         )
         port map(
-            clk1 => pll_clk,
+            clk1 => clk_dft,
             clk2  => clk_50MHz,
             rst_n => rst,
             bin_in => head_ptr_vec_1,
