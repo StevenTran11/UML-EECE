@@ -6,7 +6,7 @@ use work.seven_segment_pkg.all;
 
 entity project3 is
     generic (
-            ADDR_WIDTH : natural := 6
+            ADDR_WIDTH : natural := 7
         );
     port (
         clk_10MHz : in std_logic;   -- Input clock of 10 MHz
@@ -157,6 +157,7 @@ architecture rtl of project3 is
     signal head_ptr_vec_50, head_ptr_vec_1: std_logic_vector(ADDR_WIDTH - 1 downto 0);
     signal dout_vec : std_logic_vector(11 downto 0);
 
+	 signal adc_clk: std_logic;
 begin
     -- Get seven-segment configurations for the hexadecimal number
     hex_display <= get_hex_number(q_a, common_anode);
@@ -204,7 +205,7 @@ begin
             tsen => '1',  -- 0 = Normal, 1 = Temperature Sensing
             dout => dout,
             eoc => done,
-            clk_dft => open
+            clk_dft => adc_clk
         );
     -- Instantiate Producer FSM
     producer_inst : producer_fsm
@@ -212,7 +213,7 @@ begin
             ADDR_WIDTH => ADDR_WIDTH
         )
         port map (
-            clk       => pll_clk,
+            clk       => adc_clk,
             tail_ptr  => tail_ptr_1,
             address_b => head_ptr_1,
             soc       => soc,
@@ -240,7 +241,7 @@ begin
         )
         port map (
             clk_a => clk_50MHz,
-            clk_b => pll_clk,
+            clk_b => adc_clk,
             addr_a => tail_ptr_50,
             addr_b => head_ptr_1,
             data_a => (others => '0'), -- Not used
@@ -259,7 +260,7 @@ begin
         )
         port map(
             clk1 => clk_50MHz,
-            clk2  => pll_clk,
+            clk2  => adc_clk,
             rst_n => rst,
             bin_in => tail_ptr_vec_50,
             bin_out => tail_ptr_vec_1
@@ -270,7 +271,7 @@ begin
             input_width => ADDR_WIDTH
         )
         port map(
-            clk1 => pll_clk,
+            clk1 => adc_clk,
             clk2  => clk_50MHz,
             rst_n => rst,
             bin_in => head_ptr_vec_1,

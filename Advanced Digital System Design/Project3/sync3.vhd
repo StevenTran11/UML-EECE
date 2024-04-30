@@ -19,25 +19,21 @@ architecture rtl of sync3 is
 begin
 	process(clk1, rst_n)
 	begin
-		if rising_edge(clk1) then
-			if rst_n = '0' then
-				q <= (others => '0');  -- Representing vector of zeros using '0' attribute
-				q1 <= (others => '0'); -- Representing vector of zeros using '0' attribute
-			else
-				q <= q1;
-        		q1 <= q2;
-      		end if;
+		if rst_n = '0' then
+			q1 <= (others => '0');
+		elsif rising_edge(clk1) then
+        	q1 <= d;
     	end if;
 	end process;
 
 process(clk2, rst_n)
 	begin
-    if rising_edge(clk2) then
-    	if rst_n = '0' then
-        	q2 <= (others => '0');  -- Representing vector of zeros using '0' attribute
-      	else
-        	q2 <= d;
-		end if;
-	end if;
+	 if rst_n = '0' then
+		q2 <= (others => '0');
+		q <= (others => '0');
+    elsif rising_edge(clk2) then
+       q2 <= q1;
+		 q <= q2;
+	  end if;
 	end process;
 end architecture rtl;

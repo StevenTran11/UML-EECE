@@ -27,7 +27,7 @@ architecture fsm_arch of producer_fsm is
 		) return boolean
 		is
 	begin
-		if head > tail and head /= 2**ADDR_WIDTH - 1 and tail /= 0 then
+		if head > tail and not (head = 2**ADDR_WIDTH - 1 and tail = 0) then
 			return true;
 		elsif head < tail and (tail - head) > 1 then
 			return true;
@@ -45,26 +45,28 @@ begin
         elsif rising_edge(clk) then
             case state is
                 when START =>
-                    save <= '0';
-                    soc <= '1';
+                    --save <= '0';
+                    --soc <= '1';
                     state <= WAITS;
                 when WAITS =>
-						  save <= '0';
-                    soc <= '1';
+						  --save <= '0';
+                    --soc <= '1';
                     if done = '1' then
                         state <= CHECK;
+						  else
+								state <= WAITS;
                     end if;
                 when CHECK =>
-						  save <= '0';
-						  soc <= '0';
+						  --save <= '0';
+						  --soc <= '0';
                     if can_advance(next_address_b, tail_ptr) then
                         state <= INCREMENT;
                     else
                         state <= CHECK;
                     end if;
                 when INCREMENT =>
-						  soc <= '0';
-                    save <= '1';
+						  --soc <= '0';
+                    --save <= '1';
 						  state <= START;
                     if next_address_b = 2**ADDR_WIDTH - 1 then
                         next_address_b <= 0;
@@ -76,5 +78,7 @@ begin
     end process;
 
     address_b <= next_address_b;
-
+	 save <= '1' when state = INCREMENT else '0';
+	 soc <= '1' when state = START or state = WAITS else '0';
+	 
 end architecture fsm_arch;

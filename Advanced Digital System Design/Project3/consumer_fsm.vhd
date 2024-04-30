@@ -24,7 +24,7 @@ architecture fsm_arch of consumer_fsm is
 		) return boolean
 		is
 	begin
-		if tail > head and head /= 0 and tail /= 2**ADDR_WIDTH - 1 then
+		if tail > head and not (head = 0 and tail = 2**ADDR_WIDTH - 1) then
 			return true;
 		elsif tail < head and (head - tail) > 1 then
 			return true;
@@ -42,20 +42,26 @@ begin
         elsif rising_edge(clk) then
             case state is
                 when WAIT_FOR_SPACE =>
-                    next_address_a <= next_address_a;
+                    -- next_address_a <= next_address_a;
+						  if can_advance(head_ptr, next_address_a) then
+								state <= INCREMENT_ADDRESS;
+						  else
+								state <= WAIT_FOR_SPACE;
+						  end if;
                 when INCREMENT_ADDRESS =>
                     if next_address_a = 2**ADDR_WIDTH - 1 then
                         next_address_a <= 0;
                     else
                         next_address_a <= next_address_a + 1;
                     end if;
+						  state <= WAIT_FOR_SPACE;
             end case;
 
-            if can_advance(head_ptr,next_address_a) then
-                state <= INCREMENT_ADDRESS;
-            else
-                state <= WAIT_FOR_SPACE;
-            end if;
+--            if can_advance(head_ptr,next_address_a) then
+--                state <= INCREMENT_ADDRESS;
+--            else
+--                state <= WAIT_FOR_SPACE;
+--            end if;
         end if;
     end process;
 
