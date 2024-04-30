@@ -10,7 +10,8 @@ entity project3 is
         );
     port (
         clk_10MHz : in std_logic;   -- Input clock of 10 MHz
-        clk_50MHz : in std_logic;    -- Input clock of 50 MHz
+        clk_50MHz : in std_logic;   -- Input clock of 50 MHz
+		  rst       : in  std_logic;  -- Reset
         -- Seven-Segment Display Ports
         HEX00 : out std_logic;  -- PIN_C14
         HEX01 : out std_logic;  -- PIN_E15
@@ -62,6 +63,7 @@ architecture rtl of project3 is
             address_b    : out natural range 0 to 2**ADDR_WIDTH - 1;
             soc          : out std_logic;  -- Start of conversion
             done         : in  std_logic;  -- Done
+				rst          : in  std_logic;  -- Reset
             save         : out  std_logic  -- Save
         );
     end component producer_fsm;
@@ -72,6 +74,7 @@ architecture rtl of project3 is
         );
         port (
             clk             : in  std_logic;
+				rst             : in  std_logic;  -- Reset
             head_ptr        : in  natural range 0 to 2**ADDR_WIDTH - 1;
             address_a       : out natural range 0 to 2**ADDR_WIDTH - 1
         );
@@ -171,14 +174,12 @@ architecture rtl of project3 is
     signal tail_ptr : std_logic_vector(5 downto 0);
     signal address_a : natural range 0 to 2**ADDR_WIDTH - 1;
     signal address_b : natural range 0 to 2**ADDR_WIDTH - 1;
-    signal q_a, q_b: std_logic_vector(7 downto 0);
+    signal q_a: std_logic_vector(7 downto 0);
     signal hex_display : seven_segment_array(0 to 1);
 
-    signal chsel : natural range 0 to 2**5 - 1 := 0; -- Assigning a default value of 0
     signal soc:         std_logic;
     signal dout:        natural range 0 to 2**12 - 1;
     signal done: std_logic;
-    signal clk_dft:     std_logic;
     signal save:     std_logic;
 
 begin
@@ -216,12 +217,12 @@ begin
     adc_inst : max10_adc
         port map (
             pll_clk => pll_clk,
-            chsel => chsel,
+            chsel => 0,
             soc => soc,
             tsen => '1',  -- 0 = Normal, 1 = Temperature Sensing
             dout => dout,
             eoc => done,
-            clk_dft => clk_dft
+            clk_dft => open
         );
     -- Instantiate Producer FSM
     producer_inst : producer_fsm
@@ -234,6 +235,7 @@ begin
             address_b => address_b,
             soc       => soc,
             done      => done,
+				rst		 => rst,
             save      => save
         );
     -- Instantiate Consumer FSM
@@ -243,6 +245,7 @@ begin
         )
         port map (
             clk       => clk_50MHz,
+				rst		 => rst,
             head_ptr  => std_logic_vector_to_natural(head_ptr),
             address_a => address_a
         );
@@ -263,7 +266,7 @@ begin
             we_a => '0', -- No Write
             we_b => save,
             q_a => q_a,
-            q_b => q_b
+            q_b => open
         );
 
     -- Conversions
@@ -284,7 +287,7 @@ begin
         port map (
             clk1  => clk_50MHz,
             clk2  => pll_clk,
-            rst_n => '1',        -- Assuming synchronous reset is active high
+            rst_n => rst,        -- Assuming synchronous reset is active high
             d     => addr_b_gray,
             q     => addr_b_sync
         );
@@ -315,7 +318,7 @@ begin
         port map (
             clk1  => clk_50MHz,
             clk2  => pll_clk,
-            rst_n => '1',            -- Assuming synchronous reset is active high
+            rst_n => rst,            -- Assuming synchronous reset is active high
             d     => tail_ptr_gray,
             q     => tail_ptr_sync
         );
