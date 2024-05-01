@@ -120,7 +120,7 @@ architecture rtl of project3 is
     -- Internal signals
     signal pll_clk      : std_logic;   -- clock of 1 MHz
     signal q_a : std_logic_vector(11 downto 0);
-    signal hex_display : seven_segment_array(0 to 2);
+    signal hex_display : seven_segment_array(0 to 1);
 
     signal soc:     std_logic;
     signal dout:    natural range 0 to 2**12 - 1;
@@ -150,7 +150,7 @@ begin
     process (q_a)
     begin
         case q_a is
-            when "111011100000" | "111011100001"=>
+            when "111011100000" | "111111111111"=>
                 temperature <= "000000"; -- Temperature: 0
             when "111011100001" =>
                 temperature <= "000001"; -- Temperature: 1
