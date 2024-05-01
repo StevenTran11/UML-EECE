@@ -256,8 +256,8 @@ begin
     HEX16 <= hex_display(1).g;
 
     -- Turn off unused segments
-    HEX07 <= '0';
-    HEX17 <= '0';
+    HEX07 <= '1';
+    HEX17 <= '1';
 
     -- Instantiate PLL
 	pll_inst : pll
