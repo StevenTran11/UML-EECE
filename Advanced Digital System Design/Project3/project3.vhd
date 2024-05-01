@@ -134,10 +134,12 @@ architecture rtl of project3 is
     signal head_ptr_vec_50, head_ptr_vec_1: std_logic_vector(ADDR_WIDTH - 1 downto 0);
     signal dout_vec : std_logic_vector(11 downto 0);
     signal temperature : std_logic_vector(5 downto 0); -- Output temperature as std_logic_vector
+    signal temperature_dec : std_logic_vector(11 downto 0); -- Output temperature as std_logic_vector
 
 begin
     -- Get seven-segment configurations for the hexadecimal number
-    hex_display <= get_hex_number(temperature, common_anode);
+    temperature_dec <= to_bcd(temperature);
+    hex_display <= get_hex_number(temperature_dec, common_anode);
 
     -- Convert pointers from natural to std logic vector
     tail_ptr_vec_50 <= std_logic_vector(to_unsigned(tail_ptr_50, ADDR_WIDTH));
