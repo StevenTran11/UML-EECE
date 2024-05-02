@@ -40,6 +40,10 @@ package seven_segment_pkg is
     function to_bcd(
         data_value: std_logic_vector
     ) return std_logic_vector;
+
+    function concatenate_segments(
+        segments : seven_segment_array(5 downto 0)
+    ) return std_logic_vector;
 end package seven_segment_pkg;
 
 package body seven_segment_pkg is
@@ -114,29 +118,24 @@ package body seven_segment_pkg is
     end function lamps_off;
 
     function get_hex_number(
-        num: std_logic_vector(5 downto 0);
+        num: std_logic_vector(19 downto 0);
         lamp_mode: in lamp_configuration := default_lamp_config
     ) return seven_segment_array
     is
-        variable ret: seven_segment_array(0 to 1);
-        variable hex_digit_1, hex_digit_2: hex_digit;
+        variable ret: seven_segment_array(5 downto 0);
     begin
         -- Convert binary to hexadecimal
-        hex_digit_1 := to_integer(unsigned(num(3 downto 0)));
-        hex_digit_2 := to_integer(unsigned(num(5 downto 4)));
-        
-        -- Get seven segment configurations for each hexadecimal digit
-        ret(0) := get_hex_digit(hex_digit_1, lamp_mode);
-        ret(1) := get_hex_digit(hex_digit_2, lamp_mode);
-        
+        for i in ret'range loop
+           ret(i) := get_hex_digit(to_integer(unsigned(num(4 * i + 3 downto 4 * i))), lamp_mode);
+        end loop;
         return ret;
     end function get_hex_number;
 
     function to_bcd (
-        data_value: in std_logic_vector(11 downto 0)
+        data_value: in std_logic_vector(15 downto 0)
     ) return std_logic_vector
     is
-        variable ret: std_logic_vector(15 downto 0);
+        variable ret: std_logic_vector(19 downto 0);
         variable temp: std_logic_vector(data_value'range);
     begin
         temp := data_value;
@@ -144,7 +143,7 @@ package body seven_segment_pkg is
         for i in data_value'range loop
             for j in 0 to ret'length/4 - 1 loop
                 if unsigned(ret(4*j + 3 downto 4*j)) >= 5 then
-                    ret(4*j + 3 downto 4*j) :=std_logic_vector(unsigned(ret(4*j + 3 downto 4 * j)) + 3);
+                    ret(4*j + 3 downto 4*j) := std_logic_vector(unsigned(ret(4*j + 3 downto 4 * j)) + 3);
                 end if;
             end loop;
             ret := ret(ret'high -1 downto 0) & temp(temp'high);
@@ -153,4 +152,14 @@ package body seven_segment_pkg is
         return ret;
     end function to_bcd;
 
+    function concatenate_segments(segments : seven_segment_array(5 downto 0)) return std_logic_vector is
+        variable result : std_logic_vector(41 downto 0); -- 6 segments * 7 bits each
+    begin
+        -- Loop through each seven_segment_config in the array
+        for i in segments'range loop
+            -- Concatenate from g to a for each seven_segment_config and assign to the correct position
+            result(7 * i + 6 downto i * 7) := segments(i).g & segments(i).f & segments(i).e & segments(i).d & segments(i).c & segments(i).b & segments(i).a;
+        end loop;
+        return result;
+    end function;
 end package body seven_segment_pkg;
