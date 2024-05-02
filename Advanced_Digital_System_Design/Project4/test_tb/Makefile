@@ -1,7 +1,7 @@
 TOPLEVEL_LANG=vhdl
 VHDL_SOURCES = \
 		$(PWD)/../seven_segment_pkg.vhd \
-		$(PWD)/../sevensegmentdriver.vhd
+		$(PWD)/../SevenSegmentDriver.vhd
 
 TOPLEVEL ?= sevensegmentdriver
 SIM=ghdl
