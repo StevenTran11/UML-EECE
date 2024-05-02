@@ -1,9 +1,9 @@
 TOPLEVEL_LANG=vhdl
 VHDL_SOURCES = \
 		$(PWD)/../seven_segment_pkg.vhd \
-		$(PWD)/../SevenSegmentDriver.vhd
+		$(PWD)/../sevensegmentdriver.vhd
 
-TOPLEVEL ?= SevenSegmentDriver
+TOPLEVEL ?= sevensegmentdriver
 SIM=ghdl
 MODULE ?= tb_toplevel_wrapper
 # COMPILE_ARGS=--std=08
