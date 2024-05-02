@@ -46,7 +46,7 @@ architecture rtl of SevenSegmentDriver is
         end function features_reg;
     signal data_reg         : std_logic_vector(31 downto 0);
     signal control_reg      : std_logic_vector(31 downto 0);
-    constant MAGIC_NUMBER     : std_logic_vector(31 downto 0) := x"4144533516";
+    constant MAGIC_NUMBER     : std_logic_vector(31 downto 0) := x"41445335";
     signal preoutput        : std_logic_vector(19 downto 0);
     constant all_lamps_off : seven_segment_array(5 downto 0) := (others => lamps_off(lamp_mode));
 begin
