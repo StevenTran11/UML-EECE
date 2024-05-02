@@ -33,7 +33,7 @@ package seven_segment_pkg is
     ) return seven_segment_config;
     
     function get_hex_number(
-        num: std_logic_vector;
+        num: std_logic_vector(23 downto 0);
         lamp_mode: in lamp_configuration := default_lamp_config
     ) return seven_segment_array;
 
@@ -118,7 +118,7 @@ package body seven_segment_pkg is
     end function lamps_off;
 
     function get_hex_number(
-        num: std_logic_vector(19 downto 0);
+        num: std_logic_vector(23 downto 0);
         lamp_mode: in lamp_configuration := default_lamp_config
     ) return seven_segment_array
     is

@@ -51,7 +51,7 @@ architecture rtl of SevenSegmentDriver is
     constant all_lamps_off : seven_segment_array(5 downto 0) := (others => lamps_off(lamp_mode));
 begin
     preoutput <= to_bcd(data_reg(15 downto 0)) when control_reg(1) = '1' and decimal_support else data_reg(19 downto 0);
-    lamps <=  concatenate_segments(get_hex_number(preoutput, lamp_mode)) when control_reg(0) = '1' else concatenate_segments(all_lamps_off);
+    lamps <=  concatenate_segments(get_hex_number("0000" & preoutput, lamp_mode)) when control_reg(0) = '1' else concatenate_segments(all_lamps_off);
     process(clk, reset_n)
     begin
         if reset_n = '0' then
