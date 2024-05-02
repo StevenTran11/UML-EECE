@@ -24,6 +24,13 @@ entity SevenSegmentDriver is
 end entity SevenSegmentDriver;
 
 architecture rtl of SevenSegmentDriver is
+    function lamp_mode return lamp_configuration is 
+    begin
+        if lamp_mode_common_anode then 
+            return common_anode;
+        end if;
+        return common_cathode;
+    end function lamp_mode;
     function features_reg return std_logic_vector is
         variable result : std_logic_vector(31 downto 0) := (others => '0');
         begin
@@ -37,13 +44,6 @@ architecture rtl of SevenSegmentDriver is
             end if;
             return result;
         end function features_reg;
-    function lamp_mode return lamp_configuration is 
-    begin
-        if lamp_mode_common_anode then 
-            return common_anode;
-        end if;
-        return common_cathode;
-    end function lamp_mode;
     signal data_reg         : std_logic_vector(31 downto 0);
     signal control_reg      : std_logic_vector(31 downto 0);
     constant MAGIC_NUMBER     : std_logic_vector(31 downto 0) := x"4144533516";
