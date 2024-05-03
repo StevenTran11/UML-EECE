@@ -38,7 +38,7 @@ package seven_segment_pkg is
     ) return seven_segment_array;
 
     function to_bcd(
-        data_value: std_logic_vector
+        data_value: in std_logic_vector(15 downto 0)
     ) return std_logic_vector;
 
     function concatenate_segments(
