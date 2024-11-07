@@ -1,0 +1,16 @@
+Analysis & Synthesis Status : Successful - Wed Nov  6 21:03:40 2024
+Quartus Prime Version : 23.1std.0 Build 991 11/28/2023 SC Lite Edition
+Revision Name : counter
+Top-level Entity Name : counter
+Family : MAX 10
+Total logic elements : 51
+    Total combinational functions : 51
+    Dedicated logic registers : 28
+Total registers : 28
+Total pins : 10
+Total virtual pins : 0
+Total memory bits : 0
+Embedded Multiplier 9-bit elements : 0
+Total PLLs : 0
+UFM blocks : 0
+ADC blocks : 0
