@@ -5,9 +5,6 @@ library work;
 use work.seven_segment_pkg.all;
 
 entity counter is
-    generic (
-            ADDR_WIDTH : natural := 6
-        );
     port (
         clk_10MHz : in std_logic;   -- Input clock of 10 MHz PIN_N5
 		rst       : in  std_logic;  -- Reset PIN_B8
