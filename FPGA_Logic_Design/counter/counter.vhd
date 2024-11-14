@@ -5,9 +5,6 @@ library work;
 use work.seven_segment_pkg.all;
 
 entity counter is
-    generic (
-            ADDR_WIDTH : natural := 6
-        );
     port (
         clk_10MHz : in std_logic;   -- Input clock of 10 MHz PIN_N5
 		rst       : in  std_logic;  -- Reset PIN_B8
@@ -52,7 +49,7 @@ begin
     -- 7-Segment Display Process: Converts count_value to 7-segment output
     process(count_value)
     begin
-        seg_data <= get_hex_digit(count_value);  -- Get segment configuration for the current count
+        seg_data <= get_hex_digit(count_value, common_cathode);  -- Get segment configuration for the current count
         -- Assign each segment to its respective output pin
         HEX00 <= seg_data.a;
         HEX01 <= seg_data.b;
