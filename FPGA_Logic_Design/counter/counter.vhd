@@ -49,7 +49,7 @@ begin
     -- 7-Segment Display Process: Converts count_value to 7-segment output
     process(count_value)
     begin
-        seg_data <= get_hex_digit(count_value);  -- Get segment configuration for the current count
+        seg_data <= get_hex_digit(count_value, common_cathode);  -- Get segment configuration for the current count
         -- Assign each segment to its respective output pin
         HEX00 <= seg_data.a;
         HEX01 <= seg_data.b;
