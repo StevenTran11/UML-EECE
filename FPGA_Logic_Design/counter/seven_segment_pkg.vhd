@@ -20,7 +20,7 @@ package seven_segment_pkg is
 
     -- Define the subtype hex_digit constrained to the range of the seven_segment_table
     constant seven_segment_table : seven_segment_array(0 to 15);
-    subtype hex_digit is natural range seven_segment_table'range;
+    subtype hex_digit is natural range 0 to 15;
     subtype hex_number is natural range 0 to 2**12 - 1;
     
     function get_hex_digit(
