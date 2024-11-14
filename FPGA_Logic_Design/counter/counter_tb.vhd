@@ -68,11 +68,7 @@ begin
     wait for 10 ns;
     rst_sig <= '0';
 
-    -- Wait for a few clock cycles to allow the counter to stabilize
     wait for 1000000 ms;
-
-    -- Monitor the 7-segment displays and check for expected values
-    -- (Adjust the simulation time and expected values as needed)
     wait;
   end process;
 end architecture behavioral;
