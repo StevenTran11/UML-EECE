@@ -7,7 +7,7 @@ use work.seven_segment_pkg.all;
 entity counter is
     port (
         clk_10MHz : in std_logic;   -- Input clock of 10 MHz PIN_N5
-		rst       : in  std_logic;  -- Reset PIN_B8
+	rst       : in  std_logic;  -- Reset PIN_B8
         -- Seven-Segment Display Ports
         HEX00 : out std_logic;  -- PIN_C14
         HEX01 : out std_logic;  -- PIN_E15
