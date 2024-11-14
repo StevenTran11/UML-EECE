@@ -13,11 +13,11 @@ architecture behavioral of counter_tb is
       rst       : in  std_logic;
       HEX00     : out std_logic;
       HEX01     : out std_logic;
-	  HEX02     : out std_logic;
+      HEX02     : out std_logic;
       HEX03     : out std_logic;
-	  HEX04     : out std_logic;
-	  HEX05     : out std_logic;
-	  HEX06     : out std_logic;
+      HEX04     : out std_logic;
+      HEX05     : out std_logic;
+      HEX06     : out std_logic;
       HEX07     : out std_logic
     );
   end component counter;
