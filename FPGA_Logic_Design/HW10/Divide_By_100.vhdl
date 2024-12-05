@@ -5,8 +5,7 @@ use IEEE.NUMERIC_STD.ALL;
 entity Divide_By_100 is
     Port (
         Data_A  : in  std_logic_vector(17 downto 0);  -- Dividend
-        Data_Out : out std_logic_vector(17 downto 0);  -- Quotient
-		Test : out std_logic_vector(35 downto 0)
+        Data_Out : out std_logic_vector(17 downto 0)  -- Quotient
     );
 end Divide_By_100;
 
@@ -39,7 +38,6 @@ begin
     -- Extract the quotient (upper 18 bits from the 36-bit result)
     process(Mul_Result)
     begin
-		Test <= Mul_Result;
         Data_Out <= Mul_Result(35 downto 18);
     end process;
 

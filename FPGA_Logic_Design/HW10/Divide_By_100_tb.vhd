@@ -10,8 +10,7 @@ architecture Behavioral of Divide_By_100_tb is
     component Divide_By_100 is
         Port (
             Data_A  : in  std_logic_vector(17 downto 0);
-            Data_Out : out std_logic_vector(17 downto 0);
-			Test : out std_logic_vector(35 downto 0)
+            Data_Out : out std_logic_vector(17 downto 0)
         );
     end component;
 
@@ -23,8 +22,7 @@ begin
     uut: Divide_By_100
         port map (
             Data_A => Data_A,
-            Data_Out => Data_Out, 
-			Test => Test
+            Data_Out => Data_Out
         );
 
     -- Test Process
