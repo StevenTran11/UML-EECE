@@ -1,0 +1,18 @@
+Part 1:
+Default answer: Default response: “Regular maintenance tasks for warehouse robots include inspecting and maintaining the grippers for sufficient grip force, ensuring proper tool programming, and checking obstacle detection and avoidance capabilities.”
+Top K: 1, Chunk Size: 500, Overlap: 50, Dataset: Physics Professor, Threads: 8, Max Token: 50
+Changed Parameters
+•	Top K: 4
+o	Regular maintenance tasks for warehouse robots include inspecting and maintaining the grippers for sufficient grip force, ensuring proper tool programming, and checking obstacle detection and avoidance capabilities.
+•	Chunk Size: 100
+o	Warehouse robots typically require regular maintenance tasks such as cleaning the sensors and cameras to ensure accurate tracking, lubricating moving parts to prevent wear and tear, checking and replacing worn-out components, and updating software to fix any bugs or performance issues. Additionally, they
+•	Chunk Size: 5000
+o	Regular maintenance tasks for warehouse robots include checking and cleaning sensors and grippers for dirt and debris, lubricating mechanical components to reduce friction, calibrating the robotic arm's control system, and ensuring proper power supply and grounding. Additionally, inspecting the robotic arm
+•	Overlap: 25
+o	Regular maintenance tasks for warehouse robots include inspecting and maintaining the grippers for sufficient grip force, ensuring proper tool programming, and checking obstacle detection and avoidance capabilities.
+•	Overlap: 100
+o	Regular maintenance tasks for warehouse robots include inspecting and maintaining the grippers for sufficient grip force, ensuring proper tool programming, and checking obstacle detection and avoidance capabilities.
+•	Max token: 10
+o	Regular maintenance tasks for warehouse robots include inspecting and maintaining
+•	Max token: 200
+o	Regular maintenance tasks for warehouse robots include inspecting and maintaining the grippers for sufficient grip force, ensuring proper tool programming, and checking obstacle detection and avoidance capabilities.
