@@ -1,0 +1,19 @@
+samhi@DESKTOP-MIBL77E MINGW64 /c/Users/samhi/OneDrive/Documents/GitHub/libcoap/build
+$ ./coap-server.exe -v 7
+Apr 30 05:41:00.452 DEBG (D)TLS not enabled as none of -k, -c or -M options specified
+Apr 30 05:41:00.458 DEBG created UDP  endpoint [::]:5683
+Apr 30 05:41:00.461 DEBG created TCP  endpoint [::]:5683
+Apr 30 05:41:15.299 DEBG ***[::1]:5683 <-> [::1]:52377 (if1) UDP : session 000001f8291edc20: new incoming session
+Apr 30 05:41:15.305 DEBG ***EVENT: COAP_EVENT_SERVER_SESSION_NEW
+Apr 30 05:41:15.308 DEBG *  [::1]:5683 <-> [::1]:52377 (if1) UDP : netif: recv   26 bytes
+v:1 t:CON c:GET i:0db4 {} [ Uri-Host:localhost, Uri-Path:time, Request-Tag:0x14dcca87 ]
+Apr 30 05:41:15.312 DEBG call custom handler for resource 'time' (3)
+Apr 30 05:41:15.315 DEBG *  [::1]:5683 <-> [::1]:52377 (if1) UDP : netif: sent   28 bytes
+v:1 t:ACK c:2.05 i:0db4 {} [ ETag:0x5bbb79eb, Content-Format:text/plain, Max-Age:1 ] :: 'Apr 30 09:41:15'
+Apr 30 05:41:26.977 DEBG ***[::1]:5683 <-> [::1]:58106 (if1) UDP : session 000001f8291ef1c0: new incoming session
+Apr 30 05:41:26.984 DEBG ***EVENT: COAP_EVENT_SERVER_SESSION_NEW
+Apr 30 05:41:26.987 DEBG *  [::1]:5683 <-> [::1]:58106 (if1) UDP : netif: recv   26 bytes
+v:1 t:NON c:GET i:28c9 {} [ Uri-Host:localhost, Uri-Path:time, Request-Tag:0x0bf1b1ab ]
+Apr 30 05:41:26.991 DEBG call custom handler for resource 'time' (3)
+Apr 30 05:41:26.995 DEBG *  [::1]:5683 <-> [::1]:58106 (if1) UDP : netif: sent   28 bytes
+v:1 t:NON c:2.05 i:28c9 {} [ ETag:0x4682999b, Content-Format:text/plain, Max-Age:1 ] :: 'Apr 30 09:41:26'

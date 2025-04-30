@@ -1,0 +1,7 @@
+samhi@DESKTOP-MIBL77E MINGW64 /c/Users/samhi/OneDrive/Documents/GitHub/libcoap/build
+$ ./coap-client.exe -m get coap://localhost/time
+Apr 30 09:41:15
+
+samhi@DESKTOP-MIBL77E MINGW64 /c/Users/samhi/OneDrive/Documents/GitHub/libcoap/build
+$ ./coap-client.exe -m get -N coap://localhost/time
+Apr 30 09:41:26
